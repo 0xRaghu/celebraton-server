@@ -15,11 +15,19 @@ const app = express();
 app.use(cors());
 
 app.use(function(req, res, next) {
-  // Website you wish to allow to connect
-  res.setHeader(
-    "Access-Control-Allow-Origin",
+  var allowedOrigins = [
+    "http://127.0.0.1:3000",
     "https://celebraton.herokuapp.com"
-  );
+  ];
+  var origin = req.headers.origin;
+  if (allowedOrigins.indexOf(origin) > -1) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
+  // Website you wish to allow to connect
+  // res.setHeader(
+  //   "Access-Control-Allow-Origin",
+  //   "https://celebraton.herokuapp.com"
+  // );
 
   // Request methods you wish to allow
   res.setHeader(
