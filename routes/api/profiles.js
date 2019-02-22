@@ -86,9 +86,9 @@ router.post(
 
 router.get(
   "/getProfile",
-  // passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    Profile.findOne({ slug: "celebratonindia" })
+    Profile.findOne({ user: user.id })
       .then(profile => res.json(profile))
       .catch(err => res.json(err));
   }

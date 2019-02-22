@@ -54,22 +54,22 @@ router.post("/sendOTP", (req, res) => {
         User.updateOne({ _id: user.id }, otpObject, function(err, res) {})
           .then(res.json(user))
           .catch(err => console.log(err));
-        // req.write(
-        //   JSON.stringify({
-        //     sender: "CBRTON",
-        //     route: "4",
-        //     country: "91",
-        //     sms: [
-        //       {
-        //         message:
-        //           otp +
-        //           " is the OTP to login to CelebratON. Happy Celebrating !!!",
-        //         to: [shortnum]
-        //       }
-        //     ]
-        //   })
-        // );
-        // req.end();
+        req.write(
+          JSON.stringify({
+            sender: "CBRTON",
+            route: "4",
+            country: "91",
+            sms: [
+              {
+                message:
+                  otp +
+                  " is the OTP to login to CelebratON. Happy Celebrating !!!",
+                to: [shortnum]
+              }
+            ]
+          })
+        );
+        req.end();
       } else {
         var number = body.mobile;
         var shortnum = number.slice(-10);
@@ -109,22 +109,22 @@ router.post("/sendOTP", (req, res) => {
           .then(user => res.json(user))
           .catch(err => console.log(err));
 
-        // req.write(
-        //   JSON.stringify({
-        //     sender: "CBRTON",
-        //     route: "4",
-        //     country: "91",
-        //     sms: [
-        //       {
-        //         message:
-        //           otp +
-        //           " is the OTP to Register with CelebratON. Happy Celebrating !!!",
-        //         to: [shortnum]
-        //       }
-        //     ]
-        //   })
-        // );
-        // req.end();
+        req.write(
+          JSON.stringify({
+            sender: "CBRTON",
+            route: "4",
+            country: "91",
+            sms: [
+              {
+                message:
+                  otp +
+                  " is the OTP to Register with CelebratON. Happy Celebrating !!!",
+                to: [shortnum]
+              }
+            ]
+          })
+        );
+        req.end();
       }
     })
     .catch(err => console.log(err));
