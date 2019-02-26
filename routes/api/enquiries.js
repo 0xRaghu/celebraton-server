@@ -8,8 +8,15 @@ const passport = require("passport");
 
 //Load User Model
 const Enquiry = require("../../models/Enquiry");
+const User = require("../../models/User");
 
-router.post("/addImages", (req, res) => {});
+router.post("/addImages/:enquiryId", (req, res) => {
+  Enquiry.findOneAndUpdate(
+    { _id: req.params.enquiryId },
+    { $set: { sampleImages: req.body } },
+    { new: true }
+  ).then(enquiry => res.json(enquiry));
+});
 
 router.post(
   "/addEnquiry",
@@ -40,7 +47,7 @@ router.post(
       otherInfo: enquiry.otherInfo,
       leadAmount: leadAmount, //change
       source: enquiry.source,
-      sampleImages: enquiry.sampleImages,
+      sampleImages: null,
       noOfGuests: enquiry.noOfGuests,
       isVerified: false,
       celebratonComment: enquiry.celebratonComment
@@ -50,24 +57,29 @@ router.post(
       .save()
       .then(enquiry => {
         res.json(enquiry);
+
         //Sending mail to admin
         var elasticemail = require("elasticemail");
         var client = elasticemail.createClient({
           username: "admin@celebraton.in",
           apiKey: "4110245d-e1d2-4944-ac43-52bd0d720c2b"
         });
-        const msg = {
-          from: "admin@celebraton.in",
-          from_name: "CelebratON.in",
-          to: "admin@celebraton.in",
-          subject: "New Enquiry",
-          body_html: "body"
-        };
+        User.findById(enquiry.user).then(user => {
+          const msg = {
+            from: "admin@celebraton.in",
+            from_name: "CelebratON.in",
+            to: "admin@celebraton.in," + user.email,
+            subject: "Enquiry Successful",
+            body_html: `Dear ${user.name},<br>Your Enquiry for ${
+              enquiry.category
+            } is successful. Our representatives will call you soon to assist with your event.<br><br>You can call us at <a href="tel:07904204718">+917904204718</a> for any queries or further discussion<br><br>Happy Celebrating!`
+          };
 
-        client.mailer.send(msg, function(err, result) {
-          if (err) {
-            return console.error(err);
-          }
+          client.mailer.send(msg, function(err, result) {
+            if (err) {
+              return console.error(err);
+            }
+          });
         });
       })
       .catch(err => console.log(err));
@@ -121,19 +133,29 @@ router.post("/updatePayment/:enquiryId/:profileId", (req, res) => {
         username: "admin@celebraton.in",
         apiKey: "4110245d-e1d2-4944-ac43-52bd0d720c2b"
       });
-      const msg = {
-        from: "admin@celebraton.in",
-        from_name: "CelebratON.in",
-        to: enquiry.user.email,
-        subject: "New Vendor interest",
-        body_html: "Someone bought your enquiry"
-      };
+      Profile.findById(req.params.profileId)
+        .populate("user")
+        .then(profile => {
+          const msg = {
+            from: "admin@celebraton.in",
+            from_name: "CelebratON.in",
+            to: "admin@celebraton.in," + enquiry.user.email,
+            subject: "New Vendor interest for your Enquiry",
+            body_html: `Dear ${
+              enquiry.user.name
+            },<br><br>Thanks for choosing CelebratON.in for your event.<br><br>Your enquiry has been attended by one of our vendors who can cater to your requirements.<br><br>Vendor Profile: <a href='https://www.celebraton.in/profile?profileId=${
+              profile.slug
+            }'>${profile.companyName}</a><br>Vendor Mobile Number: <a href=${
+              profile.user.mobile
+            }>${profile.user.mobile}</a><br><br>Happy celebrating !!!`
+          };
 
-      client.mailer.send(msg, function(err, result) {
-        if (err) {
-          return console.error(err);
-        }
-      });
+          client.mailer.send(msg, function(err, result) {
+            if (err) {
+              return console.error(err);
+            }
+          });
+        });
     })
     .catch(err => console.log(err));
 });

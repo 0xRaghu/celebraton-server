@@ -32,12 +32,13 @@ router.post("/updateCategory/:categoryId", (req, res) => {
   if (req.body.name) categoryFields.name = req.body.name;
   if (req.body.slug) categoryFields.slug = req.body.slug;
   if (req.body.icon) categoryFields.icon = req.body.icon;
-  if (req.body.eventType) categoryFields.eventType = req.body.eventType;
+  if (req.body.eventType)
+    categoryFields.eventType = req.body.eventType.split(",");
   if (req.body.color) categoryFields.color = req.body.color;
   if (typeof req.body.servicesRequired !== "undefined")
     categoryFields.servicesRequired = req.body.servicesRequired.split(",");
   if (req.body.order) categoryFields.order = req.body.order;
-
+  console.log("category");
   Category.findOne({ _id: req.params.categoryId })
     .then(category => {
       if (category) {
@@ -54,7 +55,6 @@ router.post("/updateCategory/:categoryId", (req, res) => {
 });
 
 router.get("/allCategories/:limit/:skip", (req, res) => {
-  console.log("proxy works");
   let limit, skip;
   if (Number(req.params.limit) > 6) {
     limit = null;

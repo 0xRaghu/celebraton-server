@@ -62,10 +62,21 @@ const ProfileSchema = new Schema({
       }
     ]
   },
-  images: { type: [String] },
+  images: {
+    type: [
+      {
+        original: { type: String },
+        thumbnail: { type: String }
+      }
+    ]
+  },
+  addToHome: { type: Boolean },
+  artistOrder: { type: Number },
+  artistSubCategory: { type: String },
   locations: { type: [String] },
   categories: { type: [String] },
   videos: { type: [String] },
+  videoEmbedUrl: { type: [String] },
   paidBy: {
     wallet: {
       type: Number
@@ -95,6 +106,21 @@ const ProfileSchema = new Schema({
       }
     }
   ],
+  experience: { type: String },
+  eventsCovered: { type: String },
+  cancellationPolicy: { type: String },
+  paymentTerms: { type: String },
+  artistGenre: { type: String },
+  languagesKnown: { type: String },
+  openToTravel: { type: Boolean },
+  troupeSizeP: { type: String },
+  troupeSizeNP: { type: String },
+  performanceDuration: { type: String },
+  eventPreference: { type: String },
+  managedBy: { type: String },
+  managerName: { type: String },
+  managerNumber: { type: Number },
+  managerMail: { type: String },
   date: {
     type: Date,
     default: Date.now
