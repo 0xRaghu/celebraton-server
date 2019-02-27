@@ -117,9 +117,7 @@ router.post(
             role: "customer"
           };
           //Update in database
-          User.updateOne({ _id: user.id }, userObject, function(err, res) {}, {
-            new: true
-          })
+          User.updateOne({ _id: user.id }, userObject, function(err, res) {})
             .then()
             .catch(err => console.log(err));
         } else {

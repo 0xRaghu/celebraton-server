@@ -17,7 +17,6 @@ router.get("/test", (req, res) => {
 });
 
 router.post("/sendOTP", (req, res) => {
-  console.log(req.body.role);
   const body = {
     mobile: req.body.mobile,
     role: req.body.role
@@ -52,9 +51,7 @@ router.post("/sendOTP", (req, res) => {
         const otp = Math.floor(1000 + Math.random() * 9000);
         var otpObject = { tempPassword: otp };
         //Update in database
-        User.updateOne({ _id: user.id }, otpObject, function(err, res) {}, {
-          new: true
-        })
+        User.updateOne({ _id: user.id }, otpObject, function(err, res) {})
           .then(res.json(user))
           .catch(err => console.log(err));
         req.write(
