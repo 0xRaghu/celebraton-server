@@ -17,6 +17,7 @@ router.get("/test", (req, res) => {
 });
 
 router.post("/sendOTP", (req, res) => {
+  console.log(req.body.role);
   const body = {
     mobile: req.body.mobile,
     role: req.body.role
