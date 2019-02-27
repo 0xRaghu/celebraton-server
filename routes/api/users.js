@@ -51,7 +51,9 @@ router.post("/sendOTP", (req, res) => {
         const otp = Math.floor(1000 + Math.random() * 9000);
         var otpObject = { tempPassword: otp };
         //Update in database
-        User.updateOne({ _id: user.id }, otpObject, function(err, res) {})
+        User.updateOne({ _id: user.id }, otpObject, function(err, res) {}, {
+          new: true
+        })
           .then(res.json(user))
           .catch(err => console.log(err));
         req.write(

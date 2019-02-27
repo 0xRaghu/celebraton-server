@@ -341,12 +341,14 @@ router.post(
             paidBy,
             leadsBought
           }
-        }
+        },
+        { new: true }
       )
         .then(profile => {
           Profile.findOneAndUpdate(
             { _id: req.params.profileId },
-            { $push: { enquiriesBought: newEnquiry } }
+            { $push: { enquiriesBought: newEnquiry } },
+            { new: true }
           )
             .then(profile => res.json(profile))
             .catch(err => console.log(err));
@@ -384,7 +386,8 @@ router.post(
     console.log(req.body.id);
     Profile.findOneAndUpdate(
       { user: req.user.id },
-      { $push: { enquiriesRead: req.body.id } }
+      { $push: { enquiriesRead: req.body.id } },
+      { new: true }
     ).then(profile => res.json(profile));
   }
 );
@@ -395,7 +398,8 @@ router.post(
   (req, res) => {
     Profile.findOneAndUpdate(
       { user: req.user.id },
-      { $push: { wishList: req.body.id } }
+      { $push: { wishList: req.body.id } },
+      { new: true }
     ).then(profile => res.json(profile));
   }
 );
