@@ -31,7 +31,7 @@ router.post("/:role", (req, res) => {
   var msg = {
     from: "admin@celebraton.in",
     from_name: "CelebratON.in",
-    to: "ragshri@gmail.com",
+    to: "admin@celebraton.in",
     subject: "New " + req.params.role + " Contact Form Submission",
     body_html:
       "Name: " +

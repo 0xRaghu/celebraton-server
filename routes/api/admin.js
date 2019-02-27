@@ -33,7 +33,7 @@ sendEmail = (subject, body, enquiry) => {
         const msg = {
           from: "admin@celebraton.in",
           from_name: "CelebratON.in",
-          to: profile.user.email,
+          to: "admin@celebraton.in," + profile.user.email,
           subject: subject,
           body_html: body
         };
