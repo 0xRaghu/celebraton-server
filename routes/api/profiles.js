@@ -404,7 +404,6 @@ router.post(
   }
 );
 
-addMoneyToWallet;
 router.post(
   "/addMoneyToWallet/:profileId/:amount",
   passport.authenticate("jwt", { session: false }),
