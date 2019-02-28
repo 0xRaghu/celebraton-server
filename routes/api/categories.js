@@ -56,12 +56,12 @@ router.post("/updateCategory/:categoryId", (req, res) => {
 
 router.get("/allCategories/:limit/:skip", (req, res) => {
   let limit, skip;
-  if (Number(req.params.limit) > 6) {
+  if (Number(req.params.limit) > 10) {
     limit = null;
     skip = req.params.skip;
     // let skip={skip:6}
   } else {
-    limit = 5;
+    limit = 10;
     skip = req.params.skip;
   }
   Category.find()
