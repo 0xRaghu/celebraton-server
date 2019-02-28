@@ -404,4 +404,17 @@ router.post(
   }
 );
 
+addMoneyToWallet;
+router.post(
+  "/addMoneyToWallet/:profileId/:amount",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Profile.findOneAndUpdate(
+      { _id: req.params.profileId },
+      { $inc: { Wallet: Number(req.params.amount) } },
+      { new: true }
+    ).then(profile => res.json(profile));
+  }
+);
+
 module.exports = router;
