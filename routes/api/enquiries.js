@@ -47,7 +47,7 @@ router.post(
       otherInfo: enquiry.otherInfo,
       leadAmount: leadAmount, //change
       source: enquiry.source,
-      sampleImages: null,
+      sampleImages: [],
       noOfGuests: enquiry.noOfGuests,
       isVerified: false,
       celebratonComment: enquiry.celebratonComment

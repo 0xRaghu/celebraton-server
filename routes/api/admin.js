@@ -152,7 +152,6 @@ router.post(
               otherInfo: enquiry.otherInfo,
               leadAmount: leadAmount, //change
               source: enquiry.source,
-              sampleImages: enquiry.sampleImages,
               noOfGuests: enquiry.noOfGuests,
               isVerified: enquiry.isVerified,
               celebratonComment: enquiry.celebratonComment
@@ -185,7 +184,6 @@ router.post(
                   otherInfo: enquiry.otherInfo,
                   leadAmount: leadAmount, //change
                   source: enquiry.source,
-                  sampleImages: enquiry.sampleImages,
                   noOfGuests: enquiry.noOfGuests,
                   isVerified: enquiry.isVerified,
                   celebratonComment: enquiry.celebratonComment
