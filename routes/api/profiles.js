@@ -359,7 +359,7 @@ router.post(
 );
 
 router.get("/currentProfile/:slug", (req, res) => {
-  Profile.findOne({ slug: req.params.slug }).then(profile =>
+  Profile.findOne({ slug: req.params.slug.toLowerCase() }).then(profile =>
     res.status(200).json(profile)
   );
 });
