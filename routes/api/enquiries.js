@@ -88,9 +88,9 @@ router.post(
 
 router.get("/allEnquiries/:limit/:skip", (req, res) => {
   let query = {};
-  console.log(req.body.profile);
-  if (typeof req.body.profile !== "undefined") {
-    const profile = req.body.profile;
+  console.log(req.params.profile);
+  if (typeof req.params.profile !== "undefined") {
+    const profile = req.params.profile;
     query = {
       city: { $in: profile.locations },
       category: { $in: profile.categories },
