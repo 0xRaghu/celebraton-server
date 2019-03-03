@@ -88,6 +88,7 @@ router.post(
 
 router.get("/allEnquiries/:limit/:skip", (req, res) => {
   let query = {};
+  console.log(req.body.profile);
   if (typeof req.body.profile !== "undefined") {
     const profile = req.body.profile;
     query = {
