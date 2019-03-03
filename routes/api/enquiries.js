@@ -86,23 +86,22 @@ router.post(
   }
 );
 
-router.get("/allEnquiries/:limit/:skip", (req, res) => {
+router.post("/allEnquiries/:limit/:skip", (req, res) => {
   let query = {};
-  console.log(req.query.profile);
-  if (typeof req.query.profile !== "undefined") {
-    const profile = req.query.profile;
-    console.log(typeof profile.budgetBracket);
+  if (typeof req.body.profile !== "undefined") {
+    const profile = req.body.profile;
+
     query = {
       city: { $in: profile.locations },
       category: { $in: profile.categories },
       $or: [
         {
           $and: [
-            { "budgetRange.from": { $gt: 10000 } },
+            { "budgetRange.from": { $gt: profile.budgetBracket } },
             { "budgetRange.to": 0 }
           ]
         },
-        { "budgetRange.to": { $gt: 10000 } }
+        { "budgetRange.to": { $gt: profile.budgetBracket } }
       ],
       isVerified: true
     };
