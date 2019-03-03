@@ -97,11 +97,11 @@ router.get("/allEnquiries/:limit/:skip", (req, res) => {
       $or: [
         {
           $and: [
-            { "budgetRange.from": { $gt: profile.budgetBracket } },
+            { "budgetRange.from": { $gt: Number(profile.budgetBracket) } },
             { "budgetRange.to": 0 }
           ]
         },
-        { "budgetRange.to": { $gt: profile.budgetBracket } }
+        { "budgetRange.to": { $gt: Number(profile.budgetBracket) } }
       ],
       isVerified: true
     };
