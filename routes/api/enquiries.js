@@ -91,17 +91,18 @@ router.get("/allEnquiries/:limit/:skip", (req, res) => {
   console.log(req.query.profile);
   if (typeof req.query.profile !== "undefined") {
     const profile = req.query.profile;
+    console.log(typeof profile.budgetBracket);
     query = {
       city: { $in: profile.locations },
       category: { $in: profile.categories },
       $or: [
         {
           $and: [
-            { "budgetRange.from": { $gt: Number(profile.budgetBracket) } },
+            { "budgetRange.from": { $gt: 10000 } },
             { "budgetRange.to": 0 }
           ]
         },
-        { "budgetRange.to": { $gt: Number(profile.budgetBracket) } }
+        { "budgetRange.to": { $gt: 10000 } }
       ],
       isVerified: true
     };
