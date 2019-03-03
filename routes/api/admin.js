@@ -117,7 +117,11 @@ router.post(
             role: "customer"
           };
           //Update in database
-          User.findOneAndUpdate({ _id: user.id }, userObject, {new:true})
+          User.findOneAndUpdate(
+            { _id: user.id },
+            { $set: userObject },
+            { new: true }
+          )
             .then()
             .catch(err => console.log(err));
         } else {
@@ -213,7 +217,6 @@ router.post(
   (req, res) => {
     const profile = req.body.values;
     const mode = req.body.mode;
-    console.log(profile);
 
     User.findOne({ mobile: profile.mobile })
       .then(user => {
@@ -228,7 +231,11 @@ router.post(
             role: "vendor"
           };
           //Update in database
-          User.findOneAndUpdate({ _id: user.id }, userObject, {new:true})
+          User.findOneAndUpdate(
+            { _id: user.id },
+            { $set: userObject },
+            { new: true }
+          )
             .then()
             .catch(err => console.log(err));
         } else {
