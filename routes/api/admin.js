@@ -285,9 +285,8 @@ router.post(
             newProfile.videoEmbedUrl = embedUrl;
           }
 
-          if (profile.isAuthorized)
-            newProfile.isAuthorized = profile.isAuthorized;
-          if (profile.addToHome) newProfile.addToHome = profile.addToHome;
+          newProfile.isAuthorized = profile.isAuthorized;
+          newProfile.addToHome = profile.addToHome;
           if (profile.artistOrder) newProfile.artistOrder = profile.artistOrder;
           if (profile.artistSubCategory)
             newProfile.artistSubCategory = profile.artistSubCategory;
@@ -309,9 +308,7 @@ router.post(
           profile.languagesKnown
             ? (newProfile.languagesKnown = profile.languagesKnown)
             : null;
-          profile.openToTravel
-            ? (newProfile.openToTravel = profile.openToTravel)
-            : null;
+          newProfile.openToTravel = profile.openToTravel;
           profile.troupeSizeP
             ? (newProfile.troupeSizeP = profile.troupeSizeP)
             : null;
