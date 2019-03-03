@@ -373,6 +373,12 @@ router.get("/allProfiles/:limit/:skip", (req, res) => {
     .then(profiles => res.status(200).json(profiles));
 });
 
+router.get("/allProfiles", (req, res) => {
+  Profile.find()
+    .populate("user")
+    .then(profiles => res.status(200).json(profiles));
+});
+
 router.get("/adminCurrentProfile/:id", (req, res) => {
   Profile.findById(req.params.id)
     .populate("user")
