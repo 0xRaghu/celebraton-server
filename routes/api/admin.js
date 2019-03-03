@@ -117,7 +117,7 @@ router.post(
             role: "customer"
           };
           //Update in database
-          User.updateOne({ _id: user.id }, userObject, function(err, res) {})
+          User.findOneAndUpdate({ _id: user.id }, userObject, {new:true})
             .then()
             .catch(err => console.log(err));
         } else {
@@ -228,7 +228,7 @@ router.post(
             role: "vendor"
           };
           //Update in database
-          User.updateOne({ _id: user.id }, userObject, function(err, res) {})
+          User.findOneAndUpdate({ _id: user.id }, userObject, {new:true})
             .then()
             .catch(err => console.log(err));
         } else {
