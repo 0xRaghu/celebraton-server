@@ -51,7 +51,7 @@ router.post("/:role", (req, res) => {
   });
 });
 
-router.get("/allForms/:limit/:skip", (req, res) => {
+router.get("/allForms/:limit/:skip",passport.authenticate("jwt", { session: false }), (req, res) => {
   ContactForm.find()
     .sort({ date: -1 })
     .limit(Number(req.params.limit))

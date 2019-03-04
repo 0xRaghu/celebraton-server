@@ -7,6 +7,126 @@ const Location = require("../../models/Location");
 const passport = require("passport");
 const Enquiry = require("../../models/Enquiry");
 const Profile = require("../../models/Profile");
+const importedProfiles=require("../../models/importedprofiles")
+
+router.get("/convertImportedToProfiles", (req, res) => {
+  
+  importedProfiles.find().then(profiles=>{
+    profiles.map(pro=>{
+      // console.log(typeof p.toObject())
+      let p=pro.toObject();
+      let imagesArray=[];
+      const objectImages = p.images.split(",").filter(Boolean);
+      objectImages.map(image=>{
+        imagesArray.push({original:image,thumbnail:image})
+      })
+
+      const mob=p.owner - 910000000000;
+      let mail;
+      p.mail!==0? mail=p.mail:mail="";
+      const name=p.companyName;
+      const otp = Math.floor(1000 + Math.random() * 9000);
+      // console.log(mob,mail,name,otp)
+      const newUser = new User({
+        mobile: mob,
+        email: mail,
+        name: name,
+        tempPassword: otp,
+        role: "vendor"
+      });
+
+      newUser.save().then(user=>{
+        const newProfile = {};
+        newProfile.user = user.id;
+        
+        newProfile.companyName = p.companyName;
+        newProfile.slug = p.slug;
+
+        newProfile.description = p.description;
+        
+          newProfile.budgetBracket = 0;
+        
+          newProfile.primaryLocation = p.primaryLocation;
+
+        const cleanLocations = p.locations.split(",").filter(Boolean);
+        newProfile.locations=cleanLocations;
+        const cleanCategories = p.categories.split(",").filter(Boolean);
+        newProfile.categories=cleanCategories;
+        
+        newProfile.videos = p.videos.split(",").filter(Boolean);
+        let embedUrl = [];
+        if (p.videos) {
+          p.videos.split(",").map(video => {
+            var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            var match = video.match(regExp);
+            if (match && match[2].length == 11) {
+              embedUrl.push(match[2]);
+            }
+          });
+          newProfile.videoEmbedUrl = embedUrl;
+        }
+
+        newProfile.isAuthorized = true;
+        newProfile.addToHome = false;
+        
+        p.experience
+          ? (newProfile.experience = p.experience)
+          : null;
+        p.eventsCovered
+          ? (newProfile.eventsCovered = p.eventsCovered)
+          : null;
+        p.cancellationPolicy
+          ? (newProfile.cancellationPolicy = p.cancellationPolicy)
+          : null;
+        p.paymentTerms
+          ? (newProfile.paymentTerms = p.paymentTerms)
+          : null;
+        p.artistGenre
+          ? (newProfile.artistGenre = p.artistGenre)
+          : null;
+        p.languagesKnown
+          ? (newProfile.languagesKnown = p.languagesKnown)
+          : null;
+        
+        
+
+          
+            newProfile.avgRating = p.avfRating;
+          
+          
+            newProfile.promoCredit = p.promoCredit;
+          
+          
+            newProfile.Wallet = p.Wallet;
+          
+          
+            newProfile.readCount = 0;
+          
+          newProfile.enquiriesRead = []
+          newProfile.enquiriesBought = [];
+          
+            newProfile.leadsBought = 0;
+          
+
+          
+            newProfile.paidBy = {};
+          
+          newProfile.images = imagesArray;
+          
+
+          newProfile.ratings = [];
+          newProfile.wishList = [];
+          // console.log(newProfile)
+          new Profile(newProfile)
+            .save()
+            .populate("user")
+            .then(profile => res.json(profile));
+      });
+
+      
+    })
+  })
+});
 
 sendEmail = (subject, body, enquiry) => {
   //Sending mail to admin
@@ -48,7 +168,7 @@ sendEmail = (subject, body, enquiry) => {
     );
 };
 
-router.post("/updateLocation/:id", (req, res) => {
+router.post("/updateLocation/:id",passport.authenticate("jwt", { session: false }), (req, res) => {
   const locations = {};
 
   if (typeof req.body.locations !== "undefined")
@@ -74,14 +194,14 @@ router.post("/updateLocation/:id", (req, res) => {
     .catch(err => console.log(err));
 });
 
-router.get("/getLocations", (req, res) => {
+router.get("/getLocations", passport.authenticate("jwt", { session: false }),(req, res) => {
   Location.find()
 
     .then(location => res.json(location))
     .catch(err => console.log(err));
 });
 
-router.get("/allCategories", (req, res) => {
+router.get("/allCategories",passport.authenticate("jwt", { session: false }), (req, res) => {
   Category.find()
     .sort({ order: 1 })
     .then(categories => res.status(200).json(categories));

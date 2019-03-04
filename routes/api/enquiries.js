@@ -86,7 +86,7 @@ router.post(
   }
 );
 
-router.post("/allEnquiries/:limit/:skip", (req, res) => {
+router.post("/allEnquiries/:limit/:skip",passport.authenticate("jwt", { session: false }), (req, res) => {
   let query = {};
   if (typeof req.body.profile !== "undefined") {
     const profile = req.body.profile;
@@ -114,13 +114,13 @@ router.post("/allEnquiries/:limit/:skip", (req, res) => {
     .then(enquiries => res.status(200).json(enquiries));
 });
 
-router.get("/currentEnquiry/:id", (req, res) => {
+router.get("/currentEnquiry/:id",passport.authenticate("jwt", { session: false }), (req, res) => {
   Enquiry.findById(req.params.id)
     .populate("user")
     .then(enquiry => res.status(200).json(enquiry));
 });
 
-router.post("/updatePayment/:enquiryId/:profileId", (req, res) => {
+router.post("/updatePayment/:enquiryId/:profileId",passport.authenticate("jwt", { session: false }), (req, res) => {
   Enquiry.findOneAndUpdate(
     { _id: req.params.enquiryId },
     { $push: { interestedPartners: req.params.profileId } },

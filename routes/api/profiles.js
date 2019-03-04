@@ -286,7 +286,7 @@ router.get("/artistProfiles/:limit/:skip", (req, res) => {
 });
 
 router.post(
-  "/updatePayment/:enquiryId/:profileId/:leadAmount/:paymentInfo",
+  "/updatePayment/:enquiryId/:profileId/:leadAmount/:paymentInfo",passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const leadAmount = Number(req.params.leadAmount);
     const newEnquiry = {
@@ -364,7 +364,7 @@ router.get("/currentProfile/:slug", (req, res) => {
   );
 });
 
-router.get("/allProfiles/:limit/:skip", (req, res) => {
+router.get("/allProfiles/:limit/:skip",passport.authenticate("jwt", { session: false }), (req, res) => {
   Profile.find()
     .populate("user")
     .sort({ createdAt: -1 })
@@ -373,13 +373,13 @@ router.get("/allProfiles/:limit/:skip", (req, res) => {
     .then(profiles => res.status(200).json(profiles));
 });
 
-router.get("/allProfiles", (req, res) => {
+router.get("/allProfiles",passport.authenticate("jwt", { session: false }), (req, res) => {
   Profile.find()
     .populate("user")
     .then(profiles => res.status(200).json(profiles));
 });
 
-router.get("/adminCurrentProfile/:id", (req, res) => {
+router.get("/adminCurrentProfile/:id",passport.authenticate("jwt", { session: false }), (req, res) => {
   Profile.findById(req.params.id)
     .populate("user")
     .then(profile => res.status(200).json(profile));
