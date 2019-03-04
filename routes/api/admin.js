@@ -194,14 +194,14 @@ router.post("/updateLocation/:id",passport.authenticate("jwt", { session: false 
     .catch(err => console.log(err));
 });
 
-router.get("/getLocations", passport.authenticate("jwt", { session: false }),(req, res) => {
+router.get("/getLocations", (req, res) => {
   Location.find()
 
     .then(location => res.json(location))
     .catch(err => console.log(err));
 });
 
-router.get("/allCategories",passport.authenticate("jwt", { session: false }), (req, res) => {
+router.get("/allCategories", (req, res) => {
   Category.find()
     .sort({ order: 1 })
     .then(categories => res.status(200).json(categories));
