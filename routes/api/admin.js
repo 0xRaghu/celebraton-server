@@ -168,7 +168,7 @@ sendEmail = (subject, body, enquiry) => {
     );
 };
 
-router.post("/updateLocation/:id",passport.authenticate("jwt", { session: false }), (req, res) => {
+router.post("/updateLocation/:id", (req, res) => {
   const locations = {};
 
   if (typeof req.body.locations !== "undefined")

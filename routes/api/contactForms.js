@@ -1,7 +1,6 @@
 const express = require("express");
 
 const router = express.Router();
-const passport = require("passport");
 
 const ContactForm = require("../../models/ContactForm");
 
@@ -52,7 +51,7 @@ router.post("/:role", (req, res) => {
   });
 });
 
-router.get("/allForms/:limit/:skip",passport.authenticate("jwt", { session: false }), (req, res) => {
+router.get("/allForms/:limit/:skip", (req, res) => {
   ContactForm.find()
     .sort({ date: -1 })
     .limit(Number(req.params.limit))
