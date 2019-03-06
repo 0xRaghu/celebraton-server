@@ -264,12 +264,13 @@ router.post("/addImages/:profileId", async (req, res) => {
 
 router.get(
   "/getProfile",
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Profile.findOne({ user: req.user.id })
       .then(profile => {
         res.json(profile);
       })
-      .catch(err => console.log(err));
+      .catch(err => res.json(err));
   }
 );
 

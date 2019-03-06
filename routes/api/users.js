@@ -108,8 +108,7 @@ router.post("/sendOTP", (req, res) => {
         newUser
           .save()
           .then(user => {
-            const newProfile=new Profile({user:user._id});
-            newProfile.save().then(profile=>res.json(profile))
+            res.json(user)
           })
           .catch(err => console.log(err));
 
