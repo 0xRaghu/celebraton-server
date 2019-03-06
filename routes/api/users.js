@@ -11,6 +11,7 @@ const validateRegisterInput = require("../../validation/register");
 
 //Load User Model
 const User = require("../../models/User");
+const Profile=require("../../models/Profile")
 
 router.get("/test", (req, res) => {
   res.json({ msg: "Users Works !" });
@@ -106,7 +107,10 @@ router.post("/sendOTP", (req, res) => {
 
         newUser
           .save()
-          .then(user => res.json(user))
+          .then(user => {
+            const newProfile=new Profile({user:user._id});
+            newProfile.save().then(profile=>res.json(profile))
+          })
           .catch(err => console.log(err));
 
         req.write(
