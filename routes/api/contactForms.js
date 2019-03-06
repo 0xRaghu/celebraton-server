@@ -52,6 +52,7 @@ router.post("/:role", (req, res) => {
 });
 
 router.get("/allForms/:limit/:skip", (req, res) => {
+  
   ContactForm.find()
     .sort({ date: -1 })
     .limit(Number(req.params.limit))

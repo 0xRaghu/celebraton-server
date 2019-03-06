@@ -211,6 +211,9 @@ router.post(
   "/adminManageEnquiry",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
+    if(req.user.role==="admin"){
+
+    
     let budgetRange = { from: 0, to: 0, option: 0 };
     let leadAmount;
     const enquiry = req.body.enquiry;
@@ -330,6 +333,9 @@ router.post(
       )
 
       .catch(err => console.log(err));
+      }else{
+      res.status(401).json({message:"Not Authorized"});
+    }
   }
 );
 
@@ -337,6 +343,9 @@ router.post(
   "/adminManageProfile",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
+    if(req.user.role==="admin"){
+
+    
     const profile = req.body.values;
     const mode = req.body.mode;
 
@@ -513,6 +522,10 @@ router.post(
       )
 
       .catch(err => console.log(err));
+      
+      }else{
+        res.status(401).json({message:"Not Authorized"});
+      }
   }
 );
 
