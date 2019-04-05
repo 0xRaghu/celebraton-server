@@ -237,6 +237,7 @@ router.post(
       });
       newProfile.videoEmbedUrl = embedUrl;
     }
+    newProfile.date = Date.now;
 
     Profile.findOne({ user: req.user.id })
       .then(profile => {
@@ -367,7 +368,7 @@ router.get("/currentProfile/:slug", (req, res) => {
 router.get("/allProfiles/:limit/:skip", (req, res) => {
   Profile.find()
     .populate("user")
-    .sort({ createdAt: -1 })
+    .sort({ date: -1 })
     .limit(Number(req.params.limit))
     .skip(Number(req.params.skip))
     .then(profiles => res.status(200).json(profiles));
