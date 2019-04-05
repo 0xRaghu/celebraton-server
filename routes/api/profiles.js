@@ -237,7 +237,7 @@ router.post(
       });
       newProfile.videoEmbedUrl = embedUrl;
     }
-    newProfile.date = Date.now;
+    newProfile.date = Date.now();
 
     Profile.findOne({ user: req.user.id })
       .then(profile => {
@@ -390,7 +390,6 @@ router.post(
   "/readEnquiry",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    console.log(req.body.id);
     Profile.findOneAndUpdate(
       { user: req.user.id },
       { $push: { enquiriesRead: req.body.id } },
