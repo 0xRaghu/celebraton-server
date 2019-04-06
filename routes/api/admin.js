@@ -1,30 +1,52 @@
 const express = require("express");
 
 const router = express.Router();
-const moment=require('moment');
+const moment = require("moment");
 
 const Location = require("../../models/Location");
 const passport = require("passport");
 const Enquiry = require("../../models/Enquiry");
 const Profile = require("../../models/Profile");
-const importedProfiles=require("../../models/importedprofiles")
+const importedProfiles = require("../../models/importedprofiles");
+
+router.get("/changePlannersDetails", (req, res) => {
+  Profile.find().then(profiles => {
+    profiles.map(pro => {
+      const profile = pro;
+
+      if (profile.categories[8] == "SurprisePlanner") {
+        profile.categories[8] = "Surprise Planner";
+      }
+      if (profile.categories[10] == "BirthdayPlanner") {
+        profile.categories[10] = "Birthday Planner";
+      }
+      if (profile.categories[9] == "WeddingPlanner") {
+        profile.categories[9] = "Wedding Planner";
+      }
+      Profile.findOneAndUpdate(
+        { _id: profile._id },
+        { $set: profile },
+        { new: true }
+      ).then(profile => console.log("done"));
+    });
+  });
+});
 
 router.get("/convertImportedToProfiles", (req, res) => {
-  
-  importedProfiles.find().then(profiles=>{
-    profiles.map(pro=>{
+  importedProfiles.find().then(profiles => {
+    profiles.map(pro => {
       // console.log(typeof p.toObject())
-      let p=pro.toObject();
-      let imagesArray=[];
+      let p = pro.toObject();
+      let imagesArray = [];
       const objectImages = p.images.split(",").filter(Boolean);
-      objectImages.map(image=>{
-        imagesArray.push({original:image,thumbnail:image})
-      })
+      objectImages.map(image => {
+        imagesArray.push({ original: image, thumbnail: image });
+      });
 
-      const mob=p.owner - 910000000000;
+      const mob = p.owner;
       let mail;
-      p.mail!==0? mail=p.mail:mail="";
-      const name=p.companyName;
+      p.mail !== 0 ? (mail = p.mail) : (mail = "");
+      const name = p.companyName;
       const otp = Math.floor(1000 + Math.random() * 9000);
       // console.log(mob,mail,name,otp)
       const newUser = new User({
@@ -35,24 +57,24 @@ router.get("/convertImportedToProfiles", (req, res) => {
         role: "vendor"
       });
 
-      newUser.save().then(user=>{
+      newUser.save().then(user => {
         const newProfile = {};
         newProfile.user = user.id;
-        
+
         newProfile.companyName = p.companyName;
         newProfile.slug = p.slug;
 
         newProfile.description = p.description;
-        
-          newProfile.budgetBracket = 0;
-        
-          newProfile.primaryLocation = p.primaryLocation;
+
+        newProfile.budgetBracket = 0;
+
+        newProfile.primaryLocation = p.primaryLocation;
 
         const cleanLocations = p.locations.split(",").filter(Boolean);
-        newProfile.locations=cleanLocations;
+        newProfile.locations = cleanLocations;
         const cleanCategories = p.categories.split(",").filter(Boolean);
-        newProfile.categories=cleanCategories;
-        
+        newProfile.categories = cleanCategories;
+
         newProfile.videos = p.videos.split(",").filter(Boolean);
         let embedUrl = [];
         if (p.videos) {
@@ -68,64 +90,45 @@ router.get("/convertImportedToProfiles", (req, res) => {
 
         newProfile.isAuthorized = true;
         newProfile.addToHome = false;
-        
-        p.experience
-          ? (newProfile.experience = p.experience)
-          : null;
-        p.eventsCovered
-          ? (newProfile.eventsCovered = p.eventsCovered)
-          : null;
+
+        p.experience ? (newProfile.experience = p.experience) : null;
+        p.eventsCovered ? (newProfile.eventsCovered = p.eventsCovered) : null;
         p.cancellationPolicy
           ? (newProfile.cancellationPolicy = p.cancellationPolicy)
           : null;
-        p.paymentTerms
-          ? (newProfile.paymentTerms = p.paymentTerms)
-          : null;
-        p.artistGenre
-          ? (newProfile.artistGenre = p.artistGenre)
-          : null;
+        p.paymentTerms ? (newProfile.paymentTerms = p.paymentTerms) : null;
+        p.artistGenre ? (newProfile.artistGenre = p.artistGenre) : null;
         p.languagesKnown
           ? (newProfile.languagesKnown = p.languagesKnown)
           : null;
-        
-        
 
-          
-            newProfile.avgRating = p.avfRating;
-          
-          
-            newProfile.promoCredit = p.promoCredit;
-          
-          
-            newProfile.Wallet = p.Wallet;
-          
-          
-            newProfile.readCount = 0;
-          
-          newProfile.enquiriesRead = []
-          newProfile.enquiriesBought = [];
-          
-            newProfile.leadsBought = 0;
-          
+        newProfile.avgRating = p.avfRating;
 
-          
-            newProfile.paidBy = {};
-          
-          newProfile.images = imagesArray;
-          
+        newProfile.promoCredit = p.promoCredit;
 
-          newProfile.ratings = [];
-          newProfile.wishList = [];
-          // console.log(newProfile)
-          new Profile(newProfile)
-            .save()
-            .populate("user")
-            .then(profile => res.json(profile));
+        newProfile.Wallet = p.Wallet;
+
+        newProfile.readCount = 0;
+
+        newProfile.enquiriesRead = [];
+        newProfile.enquiriesBought = [];
+
+        newProfile.leadsBought = 0;
+
+        newProfile.paidBy = {};
+
+        newProfile.images = imagesArray;
+
+        newProfile.ratings = [];
+        newProfile.wishList = [];
+        // console.log(newProfile)
+        new Profile(newProfile)
+          .save()
+          .populate("user")
+          .then(profile => res.json(profile));
       });
-
-      
-    })
-  })
+    });
+  });
 });
 
 sendEmail = (subject, body, enquiry) => {
@@ -287,7 +290,35 @@ router.post(
               .populate("user")
               .then(enq => {
                 if (enquiry.sendNotification) {
-                  sendEmail(`CelebratON - New ${category.name} Enquiry from ${user.name}`, `Dear Partner,<br><br>You have got a new enquiry from ${user.name}.<br><br><span style="color:green"><b>This is a Verified Lead</b></span><br><br>Find below the details of this order:<br><br><b>Category: </b>${category.name}<br><b>for: </b>${enquiry.serviceFor}<br><b>Event Date: </b>${moment(enquiry.eventDate).format("DD MMM, YYYY")}<br><b>Requirement: </b>${enquiry.servicesRequired.join(",")}<br><b>Locality: </b>${enquiry.locality} (in ${enquiry.city})<br><b>Budget: </b>${budgetRange.to===0 ? `Above Rs.${budgetRange.from}`:`Rs.${budgetRange.from} to ${budgetRange.to}`}<br><b>Other Info: </b>${enquiry.otherInfo}<br><b>CelebratON Comments: </b>${enquiry.celebratonComment}<br><b>Lead Amount: </b>Rs.${leadAmount}<br><br>View and grab this lead in the link: <a href="https://www.celebraton.in/dashboard?enquiry=${enquiry._id}>View Enquiry</a><br><b>As per the last Mail, kindly insist the customer to pay the advance and the final payment through CelebratON to get better conversion rates. </b><br><br>Happy celebrating !!!`, enq);
+                  sendEmail(
+                    `CelebratON - New ${category.name} Enquiry from ${
+                      user.name
+                    }`,
+                    `Dear Partner,<br><br>You have got a new enquiry from ${
+                      user.name
+                    }.<br><br><span style="color:green"><b>This is a Verified Lead</b></span><br><br>Find below the details of this order:<br><br><b>Category: </b>${
+                      category.name
+                    }<br><b>for: </b>${
+                      enquiry.serviceFor
+                    }<br><b>Event Date: </b>${moment(enquiry.eventDate).format(
+                      "DD MMM, YYYY"
+                    )}<br><b>Requirement: </b>${enquiry.servicesRequired.join(
+                      ","
+                    )}<br><b>Locality: </b>${enquiry.locality} (in ${
+                      enquiry.city
+                    })<br><b>Budget: </b>${
+                      budgetRange.to === 0
+                        ? `Above Rs.${budgetRange.from}`
+                        : `Rs.${budgetRange.from} to ${budgetRange.to}`
+                    }<br><b>Other Info: </b>${
+                      enquiry.otherInfo
+                    }<br><b>CelebratON Comments: </b>${
+                      enquiry.celebratonComment
+                    }<br><b>Lead Amount: </b>Rs.${leadAmount}<br><br>View and grab this lead in the link: <a href="https://www.celebraton.in/dashboard?enquiry=${
+                      enquiry._id
+                    }>View Enquiry</a><br><b>As per the last Mail, kindly insist the customer to pay the advance and the final payment through CelebratON to get better conversion rates. </b><br><br>Happy celebrating !!!`,
+                    enq
+                  );
                 }
 
                 res.json(enq);
@@ -319,8 +350,35 @@ router.post(
               .populate("user")
               .then(enq => {
                 if (enquiry.sendNotification) {
-                  sendEmail(`CelebratON - New ${category.name} Enquiry from ${user.name}`, `Dear Partner,<br><br>You have got a new enquiry from ${user.name}.<br><br><span style="color:green"><b>This is a Verified Lead</b></span><br><br>Find below the details of this order:<br><br><b>Category: </b>${category.name}<br><b>for: </b>${enquiry.serviceFor}<br><b>Event Date: </b>${moment(enquiry.eventDate).format("DD MMM, YYYY")}<br><b>Requirement: </b>${enquiry.servicesRequired.join(",")}<br><b>Locality: </b>${enquiry.locality} (in ${enquiry.city})<br><b>Budget: </b>${budgetRange.to===0 ? `Above Rs.${budgetRange.from}`:`Rs.${budgetRange.from} to ${budgetRange.to}`}<br><b>Other Info: </b>${enquiry.otherInfo}<br><b>CelebratON Comments: </b>${enquiry.celebratonComment}<br><b>Lead Amount: </b>Rs.${leadAmount}<br><br>View and grab this lead in the link: <a href="https://www.celebraton.in/dashboard?enquiry=${enquiry._id}>View Enquiry</a><br><b>As per the last Mail, kindly insist the customer to pay the advance and the final payment through CelebratON to get better conversion rates. </b><br><br>Happy celebrating !!!`, enq);
-                
+                  sendEmail(
+                    `CelebratON - New ${category.name} Enquiry from ${
+                      user.name
+                    }`,
+                    `Dear Partner,<br><br>You have got a new enquiry from ${
+                      user.name
+                    }.<br><br><span style="color:green"><b>This is a Verified Lead</b></span><br><br>Find below the details of this order:<br><br><b>Category: </b>${
+                      category.name
+                    }<br><b>for: </b>${
+                      enquiry.serviceFor
+                    }<br><b>Event Date: </b>${moment(enquiry.eventDate).format(
+                      "DD MMM, YYYY"
+                    )}<br><b>Requirement: </b>${enquiry.servicesRequired.join(
+                      ","
+                    )}<br><b>Locality: </b>${enquiry.locality} (in ${
+                      enquiry.city
+                    })<br><b>Budget: </b>${
+                      budgetRange.to === 0
+                        ? `Above Rs.${budgetRange.from}`
+                        : `Rs.${budgetRange.from} to ${budgetRange.to}`
+                    }<br><b>Other Info: </b>${
+                      enquiry.otherInfo
+                    }<br><b>CelebratON Comments: </b>${
+                      enquiry.celebratonComment
+                    }<br><b>Lead Amount: </b>Rs.${leadAmount}<br><br>View and grab this lead in the link: <a href="https://www.celebraton.in/dashboard?enquiry=${
+                      enquiry._id
+                    }>View Enquiry</a><br><b>As per the last Mail, kindly insist the customer to pay the advance and the final payment through CelebratON to get better conversion rates. </b><br><br>Happy celebrating !!!`,
+                    enq
+                  );
                 }
 
                 res.json(enq);
