@@ -141,7 +141,7 @@ router.post(
                   subject: "CelebratON - Profile created",
                   body_html: `Dear ${
                     profile.companyName
-                  },<br><br>Thanks for partnering with CelebratON.in.<br><br>Your profile has been successfully created.<br><br>You will start getting leads for your business once we <b>authorize</b> your profile. You can call us at <a href="tel:07904204718">+917904204718</a> for any queries or authorization<br><br>You can check your profile or edit in the link: <a href='https://www.celebraton.in/dashboard'>My Dashboard</a><br><br>View the details of the lead and order, pay the lead amount and get connected directly to the customer.<br><br>Your can view your Profile at: <a href='https://www.celebraton.in/profile?profileId=${
+                  },<br><br>Thanks for partnering with CelebratON.in.<br><br>Your profile has been successfully created.<br><br>You will start getting leads for your business once we <b>authorize</b> your profile. You can call us at <a href="tel:08082338257">+918082338257</a> for any queries or authorization<br><br>You can check your profile or edit in the link: <a href='https://www.celebraton.in/dashboard'>My Dashboard</a><br><br>View the details of the lead and order, pay the lead amount and get connected directly to the customer.<br><br>Your can view your Profile at: <a href='https://www.celebraton.in/profile?profileId=${
                     profile.slug
                   }'>${
                     profile.companyName

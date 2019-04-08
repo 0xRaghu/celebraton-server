@@ -72,7 +72,7 @@ router.post(
             subject: "Enquiry Successful",
             body_html: `Dear ${user.name},<br>Your Enquiry for ${
               enquiry.category
-            } is successful. Our representatives will call you soon to assist with your event.<br><br>You can call us at <a href="tel:07904204718">+917904204718</a> for any queries or further discussion<br><br>Happy Celebrating!`
+            } is successful. Our representatives will call you soon to assist with your event.<br><br>You can call us at <a href="tel:08082338257">+918082338257</a> for any queries or further discussion<br><br>Happy Celebrating!`
           };
 
           client.mailer.send(msg, function(err, result) {
