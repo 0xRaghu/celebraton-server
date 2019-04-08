@@ -314,7 +314,9 @@ router.post(
                       enquiry.otherInfo
                     }<br><b>CelebratON Comments: </b>${
                       enquiry.celebratonComment
-                    }<br><b>Lead Amount: </b>Rs.${leadAmount}<br><br>View and grab this lead in the link: <a href="https://www.celebraton.in/dashboard?enquiry=${enquiry._id.toString()}">View Enquiry</a><br><b>As per the last Mail, kindly insist the customer to pay the advance and the final payment through CelebratON to get better conversion rates. </b><br><br>Happy celebrating !!!`,
+                    }<br><b>Lead Amount: </b>Rs.${leadAmount}<br><br>View and grab this lead in the link: <a href="https://www.celebraton.in/dashboard?enquiry=${
+                      enq._id
+                    }">View Enquiry</a><br><b>As per the last Mail, kindly insist the customer to pay the advance and the final payment through CelebratON to get better conversion rates. </b><br><br>Happy celebrating !!!`,
                     enq
                   );
                 }
@@ -372,7 +374,9 @@ router.post(
                       enquiry.otherInfo
                     }<br><b>CelebratON Comments: </b>${
                       enquiry.celebratonComment
-                    }<br><b>Lead Amount: </b>Rs.${leadAmount}<br><br>View and grab this lead in the link: <a href="https://www.celebraton.in/dashboard?enquiry=${enquiry._id.toString()}">View Enquiry</a><br><b>As per the last Mail, kindly insist the customer to pay the advance and the final payment through CelebratON to get better conversion rates. </b><br><br>Happy celebrating !!!`,
+                    }<br><b>Lead Amount: </b>Rs.${leadAmount}<br><br>View and grab this lead in the link: <a href="https://www.celebraton.in/dashboard?enquiry=${
+                      enq._id
+                    }">View Enquiry</a><br><b>As per the last Mail, kindly insist the customer to pay the advance and the final payment through CelebratON to get better conversion rates. </b><br><br>Happy celebrating !!!`,
                     enq
                   );
                 }
