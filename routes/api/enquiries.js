@@ -72,7 +72,8 @@ router.post(
             subject: "Enquiry Successful",
             body_html: `Dear ${user.name},<br>Your Enquiry for ${
               enquiry.category
-            } is successful. Our representatives will call you soon to assist with your event.<br><br>You can call us at <a href="tel:08082338257">+918082338257</a> for any queries or further discussion<br><br>Happy Celebrating!`
+            } is successful. Our representatives will call you soon to assist with your event.<br><br><b>"CelebratON critically suggests you to make your payment (advance and final settlement) through CelebratON ( Kindly Demand the expert to share the payment link (or call us at <a href="tel:08082338257">+918082338257</a>) upon confirming your order to any of our experts). So that we can safeguard your payment with us in case of any dispute. 
+            If payment is not done through CelebratON and directly to experts, CelebratON will not hold responsibility of your order for any kind of dispute"</b><br><br>You can call us at <a href="tel:08082338257">+918082338257</a> for any queries or further discussion<br><br>Happy Celebrating!`
           };
 
           client.mailer.send(msg, function(err, result) {
@@ -148,7 +149,10 @@ router.post("/updatePayment/:enquiryId/:profileId", (req, res) => {
               profile.slug
             }'>${profile.companyName}</a><br>Vendor Mobile Number: <a href=${
               profile.user.mobile
-            }>${profile.user.mobile}</a><br><br>Happy celebrating !!!`
+            }>${
+              profile.user.mobile
+            }</a><br><br><b>"CelebratON critically suggests you to make your payment (advance and final settlement) through CelebratON ( Kindly Demand the expert to share the payment link (or call us at <a href="tel:08082338257">+918082338257</a>) upon confirming your order to any of our experts). So that we can safeguard your payment with us in case of any dispute. 
+            If payment is not done through CelebratON and directly to experts, CelebratON will not hold responsibility of your order for any kind of dispute"</b><br><br>Happy celebrating !!!`
           };
 
           client.mailer.send(msg, function(err, result) {
