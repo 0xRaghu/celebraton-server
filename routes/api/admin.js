@@ -217,7 +217,7 @@ router.post(
     let budgetRange = { from: 0, to: 0, option: 0 };
     let leadAmount;
     const enquiry = req.body.enquiry;
-
+    let savedUser;
     const category = req.body.category;
     category.budget.map(budget => {
       if (budget.option === enquiry.budget) {
@@ -246,86 +246,11 @@ router.post(
             { $set: userObject },
             { new: true }
           )
-            .then()
-            .catch(err => console.log(err));
-        } else {
-          //Generate OTP
-          const otp = Math.floor(1000 + Math.random() * 9000);
-
-          const newUser = new User({
-            mobile: enquiry.mobile,
-            email: enquiry.email,
-            name: enquiry.name,
-            tempPassword: otp,
-            role: "customer"
-          });
-
-          newUser.save();
-        }
-      })
-      .then(
-        User.findOne({ mobile: enquiry.mobile }).then(user => {
-          //Create Enquiry
-          if (req.body.mode === "create") {
-            const newEnquiry = new Enquiry({
-              user: user.id,
-              category: category.name,
-              serviceFor: enquiry.serviceFor,
-              eventDate: enquiry.eventDate,
-              servicesRequired: enquiry.servicesRequired,
-              city: enquiry.city,
-              locality: enquiry.locality,
-              budgetRange: budgetRange,
-              otherInfo: enquiry.otherInfo,
-              leadAmount: leadAmount, //change
-              source: enquiry.source,
-              noOfGuests: enquiry.noOfGuests,
-              isVerified: enquiry.isVerified,
-              celebratonComment: enquiry.celebratonComment
-            });
-
-            newEnquiry.save().then(enq => {
-              if (enquiry.sendNotification) {
-                sendEmail(
-                  `CelebratON - New ${category.name} Enquiry from ${
-                    enquiry.name
-                  }`,
-                  `Dear Partner,<br><br>You have got a new enquiry from ${
-                    enquiry.name
-                  }.<br><br><span style="color:green"><b>This is a Verified Lead</b></span><br><br>Find below the details of this order:<br><br><b>Category: </b>${
-                    category.name
-                  }<br><b>for: </b>${
-                    enquiry.serviceFor
-                  }<br><b>Event Date: </b>${moment(enquiry.eventDate).format(
-                    "DD MMM, YYYY"
-                  )}<br><b>Requirement: </b>${enquiry.servicesRequired.join(
-                    ","
-                  )}<br><b>Locality: </b>${enquiry.locality} (in ${
-                    enquiry.city
-                  })<br><b>Budget: </b>${
-                    budgetRange.to === 0
-                      ? `Above Rs.${budgetRange.from}`
-                      : `Rs.${budgetRange.from} to ${budgetRange.to}`
-                  }<br><b>Other Info: </b>${
-                    enquiry.otherInfo
-                  }<br><b>CelebratON Comments: </b>${
-                    enquiry.celebratonComment
-                  }<br><b>Lead Amount: </b>Rs.${leadAmount}<br><br>View and grab this lead in the link: <a href="https://www.celebraton.in/dashboard?enquiry=${
-                    enq._id
-                  }">View Enquiry</a><br><b>As per the last Mail, kindly insist the customer to pay the advance and the final payment through CelebratON to get better conversion rates. </b><br><br>Happy celebrating !!!`,
-                  enq
-                );
-              }
-
-              res.json(enq);
-            });
-          } else {
-            //Update Enquiry
-            Enquiry.findOneAndUpdate(
-              { _id: req.body.id },
-              {
-                $set: {
-                  user: user.id,
+            .then(user => {
+              //Create Enquiry
+              if (req.body.mode === "create") {
+                const newEnquiry = new Enquiry({
+                  user: user._id,
                   category: category.name,
                   serviceFor: enquiry.serviceFor,
                   eventDate: enquiry.eventDate,
@@ -339,47 +264,237 @@ router.post(
                   noOfGuests: enquiry.noOfGuests,
                   isVerified: enquiry.isVerified,
                   celebratonComment: enquiry.celebratonComment
-                }
-              },
-              { new: true }
-            ).then(enq => {
-              if (enquiry.sendNotification) {
-                sendEmail(
-                  `CelebratON - New ${category.name} Enquiry from ${
-                    enquiry.name
-                  }`,
-                  `Dear Partner,<br><br>You have got a new enquiry from ${
-                    enquiry.name
-                  }.<br><br><span style="color:green"><b>This is a Verified Lead</b></span><br><br>Find below the details of this order:<br><br><b>Category: </b>${
-                    category.name
-                  }<br><b>for: </b>${
-                    enquiry.serviceFor
-                  }<br><b>Event Date: </b>${moment(enquiry.eventDate).format(
-                    "DD MMM, YYYY"
-                  )}<br><b>Requirement: </b>${enquiry.servicesRequired.join(
-                    ","
-                  )}<br><b>Locality: </b>${enquiry.locality} (in ${
-                    enquiry.city
-                  })<br><b>Budget: </b>${
-                    budgetRange.to === 0
-                      ? `Above Rs.${budgetRange.from}`
-                      : `Rs.${budgetRange.from} to ${budgetRange.to}`
-                  }<br><b>Other Info: </b>${
-                    enquiry.otherInfo
-                  }<br><b>CelebratON Comments: </b>${
-                    enquiry.celebratonComment
-                  }<br><b>Lead Amount: </b>Rs.${leadAmount}<br><br>View and grab this lead in the link: <a href="https://www.celebraton.in/dashboard?enquiry=${
-                    enq._id
-                  }">View Enquiry</a><br><b>As per the last Mail, kindly insist the customer to pay the advance and the final payment through CelebratON to get better conversion rates. </b><br><br>Happy celebrating !!!`,
-                  enq
-                );
-              }
+                });
 
-              res.json(enq);
-            });
-          }
-        })
-      )
+                newEnquiry.save().then(enq => {
+                  if (enquiry.sendNotification) {
+                    sendEmail(
+                      `CelebratON - New ${category.name} Enquiry from ${
+                        enquiry.name
+                      }`,
+                      `Dear Partner,<br><br>You have got a new enquiry from ${
+                        enquiry.name
+                      }.<br><br><span style="color:green"><b>This is a Verified Lead</b></span><br><br>Find below the details of this order:<br><br><b>Category: </b>${
+                        category.name
+                      }<br><b>for: </b>${
+                        enquiry.serviceFor
+                      }<br><b>Event Date: </b>${moment(
+                        enquiry.eventDate
+                      ).format(
+                        "DD MMM, YYYY"
+                      )}<br><b>Requirement: </b>${enquiry.servicesRequired.join(
+                        ","
+                      )}<br><b>Locality: </b>${enquiry.locality} (in ${
+                        enquiry.city
+                      })<br><b>Budget: </b>${
+                        budgetRange.to === 0
+                          ? `Above Rs.${budgetRange.from}`
+                          : `Rs.${budgetRange.from} to ${budgetRange.to}`
+                      }<br><b>Other Info: </b>${
+                        enquiry.otherInfo
+                      }<br><b>CelebratON Comments: </b>${
+                        enquiry.celebratonComment
+                      }<br><b>Lead Amount: </b>Rs.${leadAmount}<br><br>View and grab this lead in the link: <a href="https://www.celebraton.in/dashboard?enquiry=${
+                        enq._id
+                      }">View Enquiry</a><br><b>As per the last Mail, kindly insist the customer to pay the advance and the final payment through CelebratON to get better conversion rates. </b><br><br>Happy celebrating !!!`,
+                      enq
+                    );
+                  }
+
+                  res.json(enq);
+                });
+              } else {
+                //Update Enquiry
+                Enquiry.findOneAndUpdate(
+                  { _id: req.body.id },
+                  {
+                    $set: {
+                      user: user._id,
+                      category: category.name,
+                      serviceFor: enquiry.serviceFor,
+                      eventDate: enquiry.eventDate,
+                      servicesRequired: enquiry.servicesRequired,
+                      city: enquiry.city,
+                      locality: enquiry.locality,
+                      budgetRange: budgetRange,
+                      otherInfo: enquiry.otherInfo,
+                      leadAmount: leadAmount, //change
+                      source: enquiry.source,
+                      noOfGuests: enquiry.noOfGuests,
+                      isVerified: enquiry.isVerified,
+                      celebratonComment: enquiry.celebratonComment
+                    }
+                  },
+                  { new: true }
+                ).then(enq => {
+                  if (enquiry.sendNotification) {
+                    sendEmail(
+                      `CelebratON - New ${category.name} Enquiry from ${
+                        enquiry.name
+                      }`,
+                      `Dear Partner,<br><br>You have got a new enquiry from ${
+                        enquiry.name
+                      }.<br><br><span style="color:green"><b>This is a Verified Lead</b></span><br><br>Find below the details of this order:<br><br><b>Category: </b>${
+                        category.name
+                      }<br><b>for: </b>${
+                        enquiry.serviceFor
+                      }<br><b>Event Date: </b>${moment(
+                        enquiry.eventDate
+                      ).format(
+                        "DD MMM, YYYY"
+                      )}<br><b>Requirement: </b>${enquiry.servicesRequired.join(
+                        ","
+                      )}<br><b>Locality: </b>${enquiry.locality} (in ${
+                        enquiry.city
+                      })<br><b>Budget: </b>${
+                        budgetRange.to === 0
+                          ? `Above Rs.${budgetRange.from}`
+                          : `Rs.${budgetRange.from} to ${budgetRange.to}`
+                      }<br><b>Other Info: </b>${
+                        enquiry.otherInfo
+                      }<br><b>CelebratON Comments: </b>${
+                        enquiry.celebratonComment
+                      }<br><b>Lead Amount: </b>Rs.${leadAmount}<br><br>View and grab this lead in the link: <a href="https://www.celebraton.in/dashboard?enquiry=${
+                        enq._id
+                      }">View Enquiry</a><br><b>As per the last Mail, kindly insist the customer to pay the advance and the final payment through CelebratON to get better conversion rates. </b><br><br>Happy celebrating !!!`,
+                      enq
+                    );
+                  }
+
+                  res.json(enq);
+                });
+              }
+            })
+            .catch(err => console.log(err));
+        } else {
+          //Generate OTP
+          const otp = Math.floor(1000 + Math.random() * 9000);
+
+          const newUser = new User({
+            mobile: enquiry.mobile,
+            email: enquiry.email,
+            name: enquiry.name,
+            tempPassword: otp,
+            role: "customer"
+          });
+
+          newUser.save().then(user => {
+            //Create Enquiry
+            if (req.body.mode === "create") {
+              const newEnquiry = new Enquiry({
+                user: user._id,
+                category: category.name,
+                serviceFor: enquiry.serviceFor,
+                eventDate: enquiry.eventDate,
+                servicesRequired: enquiry.servicesRequired,
+                city: enquiry.city,
+                locality: enquiry.locality,
+                budgetRange: budgetRange,
+                otherInfo: enquiry.otherInfo,
+                leadAmount: leadAmount, //change
+                source: enquiry.source,
+                noOfGuests: enquiry.noOfGuests,
+                isVerified: enquiry.isVerified,
+                celebratonComment: enquiry.celebratonComment
+              });
+
+              newEnquiry.save().then(enq => {
+                if (enquiry.sendNotification) {
+                  sendEmail(
+                    `CelebratON - New ${category.name} Enquiry from ${
+                      enquiry.name
+                    }`,
+                    `Dear Partner,<br><br>You have got a new enquiry from ${
+                      enquiry.name
+                    }.<br><br><span style="color:green"><b>This is a Verified Lead</b></span><br><br>Find below the details of this order:<br><br><b>Category: </b>${
+                      category.name
+                    }<br><b>for: </b>${
+                      enquiry.serviceFor
+                    }<br><b>Event Date: </b>${moment(enquiry.eventDate).format(
+                      "DD MMM, YYYY"
+                    )}<br><b>Requirement: </b>${enquiry.servicesRequired.join(
+                      ","
+                    )}<br><b>Locality: </b>${enquiry.locality} (in ${
+                      enquiry.city
+                    })<br><b>Budget: </b>${
+                      budgetRange.to === 0
+                        ? `Above Rs.${budgetRange.from}`
+                        : `Rs.${budgetRange.from} to ${budgetRange.to}`
+                    }<br><b>Other Info: </b>${
+                      enquiry.otherInfo
+                    }<br><b>CelebratON Comments: </b>${
+                      enquiry.celebratonComment
+                    }<br><b>Lead Amount: </b>Rs.${leadAmount}<br><br>View and grab this lead in the link: <a href="https://www.celebraton.in/dashboard?enquiry=${
+                      enq._id
+                    }">View Enquiry</a><br><b>As per the last Mail, kindly insist the customer to pay the advance and the final payment through CelebratON to get better conversion rates. </b><br><br>Happy celebrating !!!`,
+                    enq
+                  );
+                }
+
+                res.json(enq);
+              });
+            } else {
+              //Update Enquiry
+              Enquiry.findOneAndUpdate(
+                { _id: req.body.id },
+                {
+                  $set: {
+                    user: user._id,
+                    category: category.name,
+                    serviceFor: enquiry.serviceFor,
+                    eventDate: enquiry.eventDate,
+                    servicesRequired: enquiry.servicesRequired,
+                    city: enquiry.city,
+                    locality: enquiry.locality,
+                    budgetRange: budgetRange,
+                    otherInfo: enquiry.otherInfo,
+                    leadAmount: leadAmount, //change
+                    source: enquiry.source,
+                    noOfGuests: enquiry.noOfGuests,
+                    isVerified: enquiry.isVerified,
+                    celebratonComment: enquiry.celebratonComment
+                  }
+                },
+                { new: true }
+              ).then(enq => {
+                if (enquiry.sendNotification) {
+                  sendEmail(
+                    `CelebratON - New ${category.name} Enquiry from ${
+                      enquiry.name
+                    }`,
+                    `Dear Partner,<br><br>You have got a new enquiry from ${
+                      enquiry.name
+                    }.<br><br><span style="color:green"><b>This is a Verified Lead</b></span><br><br>Find below the details of this order:<br><br><b>Category: </b>${
+                      category.name
+                    }<br><b>for: </b>${
+                      enquiry.serviceFor
+                    }<br><b>Event Date: </b>${moment(enquiry.eventDate).format(
+                      "DD MMM, YYYY"
+                    )}<br><b>Requirement: </b>${enquiry.servicesRequired.join(
+                      ","
+                    )}<br><b>Locality: </b>${enquiry.locality} (in ${
+                      enquiry.city
+                    })<br><b>Budget: </b>${
+                      budgetRange.to === 0
+                        ? `Above Rs.${budgetRange.from}`
+                        : `Rs.${budgetRange.from} to ${budgetRange.to}`
+                    }<br><b>Other Info: </b>${
+                      enquiry.otherInfo
+                    }<br><b>CelebratON Comments: </b>${
+                      enquiry.celebratonComment
+                    }<br><b>Lead Amount: </b>Rs.${leadAmount}<br><br>View and grab this lead in the link: <a href="https://www.celebraton.in/dashboard?enquiry=${
+                      enq._id
+                    }">View Enquiry</a><br><b>As per the last Mail, kindly insist the customer to pay the advance and the final payment through CelebratON to get better conversion rates. </b><br><br>Happy celebrating !!!`,
+                    enq
+                  );
+                }
+
+                res.json(enq);
+              });
+            }
+          });
+        }
+      })
 
       .catch(err => console.log(err));
   }
