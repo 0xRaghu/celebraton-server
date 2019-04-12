@@ -525,7 +525,148 @@ router.post(
             { $set: userObject },
             { new: true }
           )
-            .then()
+            .then(user => {
+              const newProfile = {};
+              if (user.id) newProfile.user = user.id;
+              if (profile.companyName)
+                newProfile.slug = profile.companyName
+                  .toLowerCase()
+                  .replace(/[^\w ]+/g, "")
+                  .replace(/ +/g, "-");
+              if (profile.companyName)
+                newProfile.companyName = profile.companyName;
+
+              if (profile.description)
+                newProfile.description = profile.description;
+              if (profile.budgetBracket)
+                newProfile.budgetBracket = profile.budgetBracket;
+              if (profile.primaryLocation)
+                newProfile.primaryLocation = profile.primaryLocation;
+
+              if (profile.locations) newProfile.locations = profile.locations;
+              if (profile.categories)
+                newProfile.categories = profile.categories;
+              if (profile.videos) newProfile.videos = profile.videos.split(",");
+              let embedUrl = [];
+              if (profile.videos) {
+                profile.videos.split(",").map(video => {
+                  var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+                  var match = video.match(regExp);
+                  if (match && match[2].length == 11) {
+                    embedUrl.push(match[2]);
+                  }
+                });
+                newProfile.videoEmbedUrl = embedUrl;
+              }
+
+              newProfile.isAuthorized = profile.isAuthorized;
+              newProfile.addToHome = profile.addToHome;
+              if (profile.artistOrder)
+                newProfile.artistOrder = profile.artistOrder;
+              if (profile.artistSubCategory)
+                newProfile.artistSubCategory = profile.artistSubCategory;
+              profile.experience
+                ? (newProfile.experience = profile.experience)
+                : null;
+              profile.eventsCovered
+                ? (newProfile.eventsCovered = profile.eventsCovered)
+                : null;
+              profile.cancellationPolicy
+                ? (newProfile.cancellationPolicy = profile.cancellationPolicy)
+                : null;
+              profile.paymentTerms
+                ? (newProfile.paymentTerms = profile.paymentTerms)
+                : null;
+              profile.artistGenre
+                ? (newProfile.artistGenre = profile.artistGenre)
+                : null;
+              profile.languagesKnown
+                ? (newProfile.languagesKnown = profile.languagesKnown)
+                : null;
+              newProfile.openToTravel = profile.openToTravel;
+              profile.troupeSizeP
+                ? (newProfile.troupeSizeP = profile.troupeSizeP)
+                : null;
+              profile.troupeSizeNP
+                ? (newProfile.troupeSizeNP = profile.troupeSizeNP)
+                : null;
+              profile.performanceDuration
+                ? (newProfile.performanceDuration = profile.performanceDuration)
+                : null;
+              profile.eventPreference
+                ? (newProfile.eventPreference = profile.eventPreference)
+                : null;
+              profile.managedBy
+                ? (newProfile.managedBy = profile.managedBy)
+                : null;
+              profile.managerName
+                ? (newProfile.managerName = profile.managerName)
+                : null;
+              profile.managerNumber
+                ? (newProfile.managerNumber = profile.managerNumber)
+                : null;
+              profile.managerMail
+                ? (newProfile.managerMail = profile.managerMail)
+                : null;
+
+              if (mode === "update") {
+                Profile.findOneAndUpdate(
+                  { user: user.id },
+                  { $set: newProfile },
+                  { new: true }
+                )
+                  .populate("user")
+                  .then(profile => res.json(profile));
+              } else {
+                if (profile.avgRating) {
+                  newProfile.avgRating = profile.avgRating;
+                } else {
+                  newProfile.avgRating = 0;
+                }
+                if (profile.promoCredit) {
+                  newProfile.promoCredit = profile.promoCredit;
+                } else {
+                  newProfile.promoCredit = 0;
+                }
+                if (profile.Wallet) {
+                  newProfile.Wallet = profile.Wallet;
+                } else {
+                  newProfile.Wallet = 0;
+                }
+                if (profile.readCount) {
+                  newProfile.readCount = profile.readCount;
+                } else {
+                  newProfile.readCount = 0;
+                }
+                profile.enquiriesRead
+                  ? (newProfile.enquiriesRead = profile.enquiriesRead)
+                  : [];
+                profile.enquiriesBought
+                  ? (newProfile.enquiriesBought = profile.enquiriesBought)
+                  : [];
+                if (profile.leadsBought) {
+                  newProfile.leadsBought = profile.leadsBought;
+                } else {
+                  newProfile.leadsBought = 0;
+                }
+
+                if (profile.paidBy) {
+                  newProfile.paidBy = profile.paidBy;
+                } else {
+                  newProfile.paidBy = {};
+                }
+                newProfile.images = [];
+
+                profile.ratings ? (newProfile.ratings = profile.ratings) : [];
+                profile.wishList
+                  ? (newProfile.wishList = profile.wishList)
+                  : [];
+                new Profile(newProfile)
+                  .save()
+                  .populate("user")
+                  .then(profile => res.json(profile));
+              }
+            })
             .catch(err => console.log(err));
         } else {
           //Generate OTP
@@ -539,145 +680,147 @@ router.post(
             role: "vendor"
           });
 
-          newUser.save();
+          newUser.save().then(user => {
+            const newProfile = {};
+            if (user.id) newProfile.user = user.id;
+            if (profile.companyName)
+              newProfile.slug = profile.companyName
+                .toLowerCase()
+                .replace(/[^\w ]+/g, "")
+                .replace(/ +/g, "-");
+            if (profile.companyName)
+              newProfile.companyName = profile.companyName;
+
+            if (profile.description)
+              newProfile.description = profile.description;
+            if (profile.budgetBracket)
+              newProfile.budgetBracket = profile.budgetBracket;
+            if (profile.primaryLocation)
+              newProfile.primaryLocation = profile.primaryLocation;
+
+            if (profile.locations) newProfile.locations = profile.locations;
+            if (profile.categories) newProfile.categories = profile.categories;
+            if (profile.videos) newProfile.videos = profile.videos.split(",");
+            let embedUrl = [];
+            if (profile.videos) {
+              profile.videos.split(",").map(video => {
+                var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+                var match = video.match(regExp);
+                if (match && match[2].length == 11) {
+                  embedUrl.push(match[2]);
+                }
+              });
+              newProfile.videoEmbedUrl = embedUrl;
+            }
+
+            newProfile.isAuthorized = profile.isAuthorized;
+            newProfile.addToHome = profile.addToHome;
+            if (profile.artistOrder)
+              newProfile.artistOrder = profile.artistOrder;
+            if (profile.artistSubCategory)
+              newProfile.artistSubCategory = profile.artistSubCategory;
+            profile.experience
+              ? (newProfile.experience = profile.experience)
+              : null;
+            profile.eventsCovered
+              ? (newProfile.eventsCovered = profile.eventsCovered)
+              : null;
+            profile.cancellationPolicy
+              ? (newProfile.cancellationPolicy = profile.cancellationPolicy)
+              : null;
+            profile.paymentTerms
+              ? (newProfile.paymentTerms = profile.paymentTerms)
+              : null;
+            profile.artistGenre
+              ? (newProfile.artistGenre = profile.artistGenre)
+              : null;
+            profile.languagesKnown
+              ? (newProfile.languagesKnown = profile.languagesKnown)
+              : null;
+            newProfile.openToTravel = profile.openToTravel;
+            profile.troupeSizeP
+              ? (newProfile.troupeSizeP = profile.troupeSizeP)
+              : null;
+            profile.troupeSizeNP
+              ? (newProfile.troupeSizeNP = profile.troupeSizeNP)
+              : null;
+            profile.performanceDuration
+              ? (newProfile.performanceDuration = profile.performanceDuration)
+              : null;
+            profile.eventPreference
+              ? (newProfile.eventPreference = profile.eventPreference)
+              : null;
+            profile.managedBy
+              ? (newProfile.managedBy = profile.managedBy)
+              : null;
+            profile.managerName
+              ? (newProfile.managerName = profile.managerName)
+              : null;
+            profile.managerNumber
+              ? (newProfile.managerNumber = profile.managerNumber)
+              : null;
+            profile.managerMail
+              ? (newProfile.managerMail = profile.managerMail)
+              : null;
+
+            if (mode === "update") {
+              Profile.findOneAndUpdate(
+                { user: user.id },
+                { $set: newProfile },
+                { new: true }
+              )
+                .populate("user")
+                .then(profile => res.json(profile));
+            } else {
+              if (profile.avgRating) {
+                newProfile.avgRating = profile.avgRating;
+              } else {
+                newProfile.avgRating = 0;
+              }
+              if (profile.promoCredit) {
+                newProfile.promoCredit = profile.promoCredit;
+              } else {
+                newProfile.promoCredit = 0;
+              }
+              if (profile.Wallet) {
+                newProfile.Wallet = profile.Wallet;
+              } else {
+                newProfile.Wallet = 0;
+              }
+              if (profile.readCount) {
+                newProfile.readCount = profile.readCount;
+              } else {
+                newProfile.readCount = 0;
+              }
+              profile.enquiriesRead
+                ? (newProfile.enquiriesRead = profile.enquiriesRead)
+                : [];
+              profile.enquiriesBought
+                ? (newProfile.enquiriesBought = profile.enquiriesBought)
+                : [];
+              if (profile.leadsBought) {
+                newProfile.leadsBought = profile.leadsBought;
+              } else {
+                newProfile.leadsBought = 0;
+              }
+
+              if (profile.paidBy) {
+                newProfile.paidBy = profile.paidBy;
+              } else {
+                newProfile.paidBy = {};
+              }
+              newProfile.images = [];
+
+              profile.ratings ? (newProfile.ratings = profile.ratings) : [];
+              profile.wishList ? (newProfile.wishList = profile.wishList) : [];
+              new Profile(newProfile)
+                .save()
+                .populate("user")
+                .then(profile => res.json(profile));
+            }
+          });
         }
       })
-      .then(
-        User.findOne({ mobile: profile.mobile }).then(user => {
-          const newProfile = {};
-          if (user.id) newProfile.user = user.id;
-          if (profile.companyName)
-            newProfile.slug = profile.companyName
-              .toLowerCase()
-              .replace(/[^\w ]+/g, "")
-              .replace(/ +/g, "-");
-          if (profile.companyName) newProfile.companyName = profile.companyName;
-
-          if (profile.description) newProfile.description = profile.description;
-          if (profile.budgetBracket)
-            newProfile.budgetBracket = profile.budgetBracket;
-          if (profile.primaryLocation)
-            newProfile.primaryLocation = profile.primaryLocation;
-
-          if (profile.locations) newProfile.locations = profile.locations;
-          if (profile.categories) newProfile.categories = profile.categories;
-          if (profile.videos) newProfile.videos = profile.videos.split(",");
-          let embedUrl = [];
-          if (profile.videos) {
-            profile.videos.split(",").map(video => {
-              var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-              var match = video.match(regExp);
-              if (match && match[2].length == 11) {
-                embedUrl.push(match[2]);
-              }
-            });
-            newProfile.videoEmbedUrl = embedUrl;
-          }
-
-          newProfile.isAuthorized = profile.isAuthorized;
-          newProfile.addToHome = profile.addToHome;
-          if (profile.artistOrder) newProfile.artistOrder = profile.artistOrder;
-          if (profile.artistSubCategory)
-            newProfile.artistSubCategory = profile.artistSubCategory;
-          profile.experience
-            ? (newProfile.experience = profile.experience)
-            : null;
-          profile.eventsCovered
-            ? (newProfile.eventsCovered = profile.eventsCovered)
-            : null;
-          profile.cancellationPolicy
-            ? (newProfile.cancellationPolicy = profile.cancellationPolicy)
-            : null;
-          profile.paymentTerms
-            ? (newProfile.paymentTerms = profile.paymentTerms)
-            : null;
-          profile.artistGenre
-            ? (newProfile.artistGenre = profile.artistGenre)
-            : null;
-          profile.languagesKnown
-            ? (newProfile.languagesKnown = profile.languagesKnown)
-            : null;
-          newProfile.openToTravel = profile.openToTravel;
-          profile.troupeSizeP
-            ? (newProfile.troupeSizeP = profile.troupeSizeP)
-            : null;
-          profile.troupeSizeNP
-            ? (newProfile.troupeSizeNP = profile.troupeSizeNP)
-            : null;
-          profile.performanceDuration
-            ? (newProfile.performanceDuration = profile.performanceDuration)
-            : null;
-          profile.eventPreference
-            ? (newProfile.eventPreference = profile.eventPreference)
-            : null;
-          profile.managedBy ? (newProfile.managedBy = profile.managedBy) : null;
-          profile.managerName
-            ? (newProfile.managerName = profile.managerName)
-            : null;
-          profile.managerNumber
-            ? (newProfile.managerNumber = profile.managerNumber)
-            : null;
-          profile.managerMail
-            ? (newProfile.managerMail = profile.managerMail)
-            : null;
-
-          if (mode === "update") {
-            Profile.findOneAndUpdate(
-              { user: user.id },
-              { $set: newProfile },
-              { new: true }
-            )
-              .populate("user")
-              .then(profile => res.json(profile));
-          } else {
-            if (profile.avgRating) {
-              newProfile.avgRating = profile.avgRating;
-            } else {
-              newProfile.avgRating = 0;
-            }
-            if (profile.promoCredit) {
-              newProfile.promoCredit = profile.promoCredit;
-            } else {
-              newProfile.promoCredit = 0;
-            }
-            if (profile.Wallet) {
-              newProfile.Wallet = profile.Wallet;
-            } else {
-              newProfile.Wallet = 0;
-            }
-            if (profile.readCount) {
-              newProfile.readCount = profile.readCount;
-            } else {
-              newProfile.readCount = 0;
-            }
-            profile.enquiriesRead
-              ? (newProfile.enquiriesRead = profile.enquiriesRead)
-              : [];
-            profile.enquiriesBought
-              ? (newProfile.enquiriesBought = profile.enquiriesBought)
-              : [];
-            if (profile.leadsBought) {
-              newProfile.leadsBought = profile.leadsBought;
-            } else {
-              newProfile.leadsBought = 0;
-            }
-
-            if (profile.paidBy) {
-              newProfile.paidBy = profile.paidBy;
-            } else {
-              newProfile.paidBy = {};
-            }
-            newProfile.images = [];
-
-            profile.ratings ? (newProfile.ratings = profile.ratings) : [];
-            profile.wishList ? (newProfile.wishList = profile.wishList) : [];
-            new Profile(newProfile)
-              .save()
-              .populate("user")
-              .then(profile => res.json(profile));
-          }
-        })
-      )
 
       .catch(err => console.log(err));
   }
