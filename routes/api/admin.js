@@ -224,7 +224,7 @@ sendSms = (body, enquiry) => {
             ]
           })
         );
-        req.end();
+        // req.end();
       })
     );
 };
