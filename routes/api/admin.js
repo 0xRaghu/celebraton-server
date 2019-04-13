@@ -207,7 +207,7 @@ sendSms = (body, enquiry) => {
   };
   Profile.find(query)
     .populate("user")
-    .then(profiles =>
+    .then(profiles => {
       profiles.map(profile => {
         console.log(profile.user.mobile);
         var number = profile.user.mobile;
@@ -225,9 +225,9 @@ sendSms = (body, enquiry) => {
             ]
           })
         );
-        // req.end();
-      })
-    );
+      });
+      req.end();
+    });
 };
 
 router.post("/updateLocation/:id", (req, res) => {
