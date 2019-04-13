@@ -172,28 +172,6 @@ sendEmail = (subject, body, enquiry) => {
 };
 
 sendSms = (body, enquiry) => {
-  var http = require("http");
-  var options = {
-    method: "POST",
-    hostname: "api.msg91.com",
-    port: null,
-    path: "/api/v2/sendsms",
-    headers: {
-      authkey: "185228AUF57pUKt5n5a17fb80",
-      "content-type": "application/json"
-    }
-  };
-
-  var req = http.request(options, function(res) {
-    var chunks = [];
-    res.on("data", function(chunk) {
-      chunks.push(chunk);
-    });
-    res.on("end", function() {
-      var body = Buffer.concat(chunks);
-    });
-  });
-
   const query = {
     locations: enquiry.city,
     categories: enquiry.category,
@@ -207,11 +185,31 @@ sendSms = (body, enquiry) => {
   };
   Profile.find(query)
     .populate("user")
-    .then(profiles => {
+    .then(profiles =>
       profiles.map(profile => {
         console.log(profile.user.mobile);
         var number = profile.user.mobile;
+        var http = require("http");
+        var options = {
+          method: "POST",
+          hostname: "api.msg91.com",
+          port: null,
+          path: "/api/v2/sendsms",
+          headers: {
+            authkey: "185228AUF57pUKt5n5a17fb80",
+            "content-type": "application/json"
+          }
+        };
 
+        var req = http.request(options, function(res) {
+          var chunks = [];
+          res.on("data", function(chunk) {
+            chunks.push(chunk);
+          });
+          res.on("end", function() {
+            var body = Buffer.concat(chunks);
+          });
+        });
         req.write(
           JSON.stringify({
             sender: "CBRTON",
@@ -225,9 +223,9 @@ sendSms = (body, enquiry) => {
             ]
           })
         );
-      });
-      req.end();
-    });
+        req.end();
+      })
+    );
 };
 
 router.post("/updateLocation/:id", (req, res) => {
