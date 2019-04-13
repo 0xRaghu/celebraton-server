@@ -171,6 +171,64 @@ sendEmail = (subject, body, enquiry) => {
     );
 };
 
+sendSms = (body, enquiry) => {
+  var http = require("http");
+  var options = {
+    method: "POST",
+    hostname: "api.msg91.com",
+    port: null,
+    path: "/api/v2/sendsms",
+    headers: {
+      authkey: "185228AUF57pUKt5n5a17fb80",
+      "content-type": "application/json"
+    }
+  };
+
+  var req = http.request(options, function(res) {
+    var chunks = [];
+    res.on("data", function(chunk) {
+      chunks.push(chunk);
+    });
+    res.on("end", function() {
+      var body = Buffer.concat(chunks);
+    });
+  });
+
+  const query = {
+    locations: enquiry.city,
+    categories: enquiry.category,
+
+    budgetBracket:
+      enquiry.budgetRange.to === 0
+        ? { $gt: enquiry.budgetRange.from }
+        : { $lt: enquiry.budgetRange.to },
+
+    isAuthorized: true
+  };
+  Profile.find(query)
+    .populate("user")
+    .then(profiles =>
+      profiles.map(profile => {
+        var number = profile.user.mobile;
+
+        req.write(
+          JSON.stringify({
+            sender: "CBRTON",
+            route: "4",
+            country: "91",
+            sms: [
+              {
+                message: body,
+                to: [number]
+              }
+            ]
+          })
+        );
+        req.end();
+      })
+    );
+};
+
 router.post("/updateLocation/:id", (req, res) => {
   const locations = {};
 
@@ -296,7 +354,17 @@ router.post(
                         enquiry.celebratonComment
                       }<br><b>Lead Amount: </b>Rs.${leadAmount}<br><br>View and grab this lead in the link: <a href="https://www.celebraton.in/dashboard?enquiry=${
                         enq._id
-                      }">View Enquiry</a><br><b>As per the last Mail, kindly insist the customer to pay the advance and the final payment through CelebratON to get better conversion rates. </b><br><br>Happy celebrating !!!`,
+                      }&source=Email">View Enquiry</a><br><b>As per the last Mail, kindly insist the customer to pay the advance and the final payment through CelebratON to get better conversion rates. </b><br><br>Happy celebrating !!!`,
+                      enq
+                    );
+                    sendSms(
+                      `Dear Partner,<br><br>You have got a new ${
+                        category.name
+                      } enquiry from ${
+                        enquiry.name
+                      }<br>View and grab this lead in the link: <a href="https://www.celebraton.in/dashboard?enquiry=${
+                        enq._id
+                      }&source=Sms">View Enquiry</a><br>Happy celebrating !!!`,
                       enq
                     );
                   }
@@ -356,7 +424,17 @@ router.post(
                         enquiry.celebratonComment
                       }<br><b>Lead Amount: </b>Rs.${leadAmount}<br><br>View and grab this lead in the link: <a href="https://www.celebraton.in/dashboard?enquiry=${
                         enq._id
-                      }">View Enquiry</a><br><b>As per the last Mail, kindly insist the customer to pay the advance and the final payment through CelebratON to get better conversion rates. </b><br><br>Happy celebrating !!!`,
+                      }&source=Email">View Enquiry</a><br><b>As per the last Mail, kindly insist the customer to pay the advance and the final payment through CelebratON to get better conversion rates. </b><br><br>Happy celebrating !!!`,
+                      enq
+                    );
+                    sendSms(
+                      `Dear Partner,<br><br>You have got a new ${
+                        category.name
+                      } enquiry from ${
+                        enquiry.name
+                      }<br>View and grab this lead in the link: <a href="https://www.celebraton.in/dashboard?enquiry=${
+                        enq._id
+                      }&source=Sms">View Enquiry</a><br>Happy celebrating !!!`,
                       enq
                     );
                   }
@@ -426,7 +504,17 @@ router.post(
                       enquiry.celebratonComment
                     }<br><b>Lead Amount: </b>Rs.${leadAmount}<br><br>View and grab this lead in the link: <a href="https://www.celebraton.in/dashboard?enquiry=${
                       enq._id
-                    }">View Enquiry</a><br><b>As per the last Mail, kindly insist the customer to pay the advance and the final payment through CelebratON to get better conversion rates. </b><br><br>Happy celebrating !!!`,
+                    }&source=Email">View Enquiry</a><br><b>As per the last Mail, kindly insist the customer to pay the advance and the final payment through CelebratON to get better conversion rates. </b><br><br>Happy celebrating !!!`,
+                    enq
+                  );
+                  sendSms(
+                    `Dear Partner,<br><br>You have got a new ${
+                      category.name
+                    } enquiry from ${
+                      enquiry.name
+                    }<br>View and grab this lead in the link: <a href="https://www.celebraton.in/dashboard?enquiry=${
+                      enq._id
+                    }&source=Sms">View Enquiry</a><br>Happy celebrating !!!`,
                     enq
                   );
                 }
@@ -484,7 +572,17 @@ router.post(
                       enquiry.celebratonComment
                     }<br><b>Lead Amount: </b>Rs.${leadAmount}<br><br>View and grab this lead in the link: <a href="https://www.celebraton.in/dashboard?enquiry=${
                       enq._id
-                    }">View Enquiry</a><br><b>As per the last Mail, kindly insist the customer to pay the advance and the final payment through CelebratON to get better conversion rates. </b><br><br>Happy celebrating !!!`,
+                    }&source=Email">View Enquiry</a><br><b>As per the last Mail, kindly insist the customer to pay the advance and the final payment through CelebratON to get better conversion rates. </b><br><br>Happy celebrating !!!`,
+                    enq
+                  );
+                  sendSms(
+                    `Dear Partner,<br><br>You have got a new ${
+                      category.name
+                    } enquiry from ${
+                      enquiry.name
+                    }<br>View and grab this lead in the link: <a href="https://www.celebraton.in/dashboard?enquiry=${
+                      enq._id
+                    }&source=Sms">View Enquiry</a><br>Happy celebrating !!!`,
                     enq
                   );
                 }
