@@ -208,7 +208,9 @@ sendSms = (body, enquiry) => {
   Profile.find(query)
     .populate("user")
     .then(profiles =>
+      console.log(profiles);
       profiles.map(profile => {
+        console.log(profile.user.mobile);
         var number = profile.user.mobile;
 
         req.write(
@@ -358,13 +360,11 @@ router.post(
                       enq
                     );
                     sendSms(
-                      `Dear Partner,<br><br>You have got a new ${
-                        category.name
-                      } enquiry from ${
+                      `There is a new ${category.name} enquiry from ${
                         enquiry.name
-                      }<br>View and grab this lead in the link: <a href="https://www.celebraton.in/dashboard?enquiry=${
+                      }. View and grab this lead in the link: https://www.celebraton.in/dashboard?enquiry=${
                         enq._id
-                      }&source=Sms">View Enquiry</a><br>Happy celebrating !!!`,
+                      }&source=Sms --CelebratON`,
                       enq
                     );
                   }
@@ -428,13 +428,11 @@ router.post(
                       enq
                     );
                     sendSms(
-                      `Dear Partner,<br><br>You have got a new ${
-                        category.name
-                      } enquiry from ${
+                      `There is a new ${category.name} enquiry from ${
                         enquiry.name
-                      }<br>View and grab this lead in the link: <a href="https://www.celebraton.in/dashboard?enquiry=${
+                      }. View and grab this lead in the link: https://www.celebraton.in/dashboard?enquiry=${
                         enq._id
-                      }&source=Sms">View Enquiry</a><br>Happy celebrating !!!`,
+                      }&source=Sms --CelebratON`,
                       enq
                     );
                   }
@@ -508,13 +506,11 @@ router.post(
                     enq
                   );
                   sendSms(
-                    `Dear Partner,<br><br>You have got a new ${
-                      category.name
-                    } enquiry from ${
+                    `There is a new ${category.name} enquiry from ${
                       enquiry.name
-                    }<br>View and grab this lead in the link: <a href="https://www.celebraton.in/dashboard?enquiry=${
+                    }. View and grab this lead in the link: https://www.celebraton.in/dashboard?enquiry=${
                       enq._id
-                    }&source=Sms">View Enquiry</a><br>Happy celebrating !!!`,
+                    }&source=Sms --CelebratON`,
                     enq
                   );
                 }
@@ -576,13 +572,11 @@ router.post(
                     enq
                   );
                   sendSms(
-                    `Dear Partner,<br><br>You have got a new ${
-                      category.name
-                    } enquiry from ${
+                    `There is a new ${category.name} enquiry from ${
                       enquiry.name
-                    }<br>View and grab this lead in the link: <a href="https://www.celebraton.in/dashboard?enquiry=${
+                    }. View and grab this lead in the link: https://www.celebraton.in/dashboard?enquiry=${
                       enq._id
-                    }&source=Sms">View Enquiry</a><br>Happy celebrating !!!`,
+                    }&source=Sms --CelebratON`,
                     enq
                   );
                 }
