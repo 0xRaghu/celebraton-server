@@ -208,7 +208,6 @@ sendSms = (body, enquiry) => {
   Profile.find(query)
     .populate("user")
     .then(profiles =>
-      console.log(profiles);
       profiles.map(profile => {
         console.log(profile.user.mobile);
         var number = profile.user.mobile;
