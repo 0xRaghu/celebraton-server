@@ -752,7 +752,6 @@ router.post(
                   : [];
                 new Profile(newProfile)
                   .save()
-                  .populate("user")
                   .then(profile => res.json(profile));
               }
             })

@@ -115,6 +115,26 @@ router.post("/allEnquiries/:limit/:skip", (req, res) => {
     .then(enquiries => res.status(200).json(enquiries));
 });
 
+router.get("/allEnquiriesSearch", (req, res) => {
+  let query = req.body.search;
+
+  // Enquiry.createIndex({
+  //   category: "text",
+  //   serviceFor: "text",
+  //   city: "text",
+  //   locality: "text",
+  //   otherInfo: "text",
+  //   celebratonComment: "text",
+  //   user: "text"
+  // });
+  Enquiry.find({
+    $text: { $search: query }
+  })
+    .populate("user")
+    .sort({ createdAt: -1 })
+    .then(enquiries => res.status(200).json(enquiries));
+});
+
 router.get("/currentEnquiry/:id", (req, res) => {
   Enquiry.findById(req.params.id)
     .populate("user")
