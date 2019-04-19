@@ -10,8 +10,13 @@ router.post("/:role", (req, res) => {
     mobile: req.body.mobile,
     role: req.params.role
   });
-  if (typeof req.body.profile !== "undefined") {
-    newForm.profile = { _id: req.body.profile._id };
+  if (
+    typeof req.body.profile !== "undefined" &&
+    req.body.profile.includes("profile")
+  ) {
+    newForm.profile = {
+      _id: "https://www.celebraton.in/profile/" + req.body.profile
+    };
   } else {
     newForm.profile = { _id: "general" };
   }
@@ -52,7 +57,6 @@ router.post("/:role", (req, res) => {
 });
 
 router.get("/allForms/:limit/:skip", (req, res) => {
-  
   ContactForm.find()
     .sort({ date: -1 })
     .limit(Number(req.params.limit))
