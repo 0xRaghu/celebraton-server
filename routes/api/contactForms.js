@@ -15,7 +15,7 @@ router.post("/:role", (req, res) => {
     req.body.profile.includes("profile")
   ) {
     newForm.profile = {
-      _id: "https://www.celebraton.in/profile/" + req.body.profile
+      _id: "https://www.celebraton.in/" + req.body.profile
     };
   } else {
     newForm.profile = { _id: "general" };
