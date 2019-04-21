@@ -141,6 +141,30 @@ router.get("/currentEnquiry/:id", (req, res) => {
     .then(enquiry => res.status(200).json(enquiry));
 });
 
+router.post("/capturePayment", (req, res) => {
+  id = req.body.responseId;
+  amount = req.body.amountToPay;
+  var request = require("request");
+  request(
+    {
+      method: "POST",
+      // url: 'https://rzp_test_HAxh4YMFxq5aKf:QlZ86FAIaxjy3bUnHwIVGroO@api.razorpay.com/v1/payments/'+id+'/capture',
+      url:
+        "https://rzp_live_g0RFgYo3CprLSc:l67bIkZKFOhNcQdkP1jcOmi0@api.razorpay.com/v1/payments/" +
+        id +
+        "/capture",
+      form: {
+        amount: amount
+      }
+    },
+    function(error, response, body) {
+      // console.log('Status:', response.statusCode);
+      // console.log('Headers:', JSON.stringify(response.headers));
+      // console.log('Response:', body);
+    }
+  );
+});
+
 router.post("/updatePayment/:enquiryId/:profileId", (req, res) => {
   Enquiry.findOneAndUpdate(
     { _id: req.params.enquiryId },
