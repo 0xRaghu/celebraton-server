@@ -356,14 +356,14 @@ router.post(
                       }&source=Email">View Enquiry</a><br><b>As per the last Mail, kindly insist the customer to pay the advance and the final payment through CelebratON to get better conversion rates. </b><br><br>Happy celebrating !!!`,
                       enq
                     );
-                    sendSms(
-                      `There is a new ${category.name} enquiry from ${
-                        enquiry.name
-                      }. View and grab this lead in the link: https://www.celebraton.in/dashboard?enquiry=${
-                        enq._id
-                      }&source=Sms --CelebratON`,
-                      enq
-                    );
+                    // sendSms(
+                    //   `There is a new ${category.name} enquiry from ${
+                    //     enquiry.name
+                    //   }. View and grab this lead in the link: https://www.celebraton.in/dashboard?enquiry=${
+                    //     enq._id
+                    //   }&source=Sms --CelebratON`,
+                    //   enq
+                    // );
                   }
 
                   res.json(enq);
@@ -424,14 +424,14 @@ router.post(
                       }&source=Email">View Enquiry</a><br><b>As per the last Mail, kindly insist the customer to pay the advance and the final payment through CelebratON to get better conversion rates. </b><br><br>Happy celebrating !!!`,
                       enq
                     );
-                    sendSms(
-                      `There is a new ${category.name} enquiry from ${
-                        enquiry.name
-                      }. View and grab this lead in the link: https://www.celebraton.in/dashboard?enquiry=${
-                        enq._id
-                      }&source=Sms --CelebratON`,
-                      enq
-                    );
+                    // sendSms(
+                    //   `There is a new ${category.name} enquiry from ${
+                    //     enquiry.name
+                    //   }. View and grab this lead in the link: https://www.celebraton.in/dashboard?enquiry=${
+                    //     enq._id
+                    //   }&source=Sms --CelebratON`,
+                    //   enq
+                    // );
                   }
 
                   res.json(enq);
@@ -502,14 +502,14 @@ router.post(
                     }&source=Email">View Enquiry</a><br><b>As per the last Mail, kindly insist the customer to pay the advance and the final payment through CelebratON to get better conversion rates. </b><br><br>Happy celebrating !!!`,
                     enq
                   );
-                  sendSms(
-                    `There is a new ${category.name} enquiry from ${
-                      enquiry.name
-                    }. View and grab this lead in the link: https://www.celebraton.in/dashboard?enquiry=${
-                      enq._id
-                    }&source=Sms --CelebratON`,
-                    enq
-                  );
+                  // sendSms(
+                  //   `There is a new ${category.name} enquiry from ${
+                  //     enquiry.name
+                  //   }. View and grab this lead in the link: https://www.celebraton.in/dashboard?enquiry=${
+                  //     enq._id
+                  //   }&source=Sms --CelebratON`,
+                  //   enq
+                  // );
                 }
 
                 res.json(enq);
@@ -568,14 +568,14 @@ router.post(
                     }&source=Email">View Enquiry</a><br><b>As per the last Mail, kindly insist the customer to pay the advance and the final payment through CelebratON to get better conversion rates. </b><br><br>Happy celebrating !!!`,
                     enq
                   );
-                  sendSms(
-                    `There is a new ${category.name} enquiry from ${
-                      enquiry.name
-                    }. View and grab this lead in the link: https://www.celebraton.in/dashboard?enquiry=${
-                      enq._id
-                    }&source=Sms --CelebratON`,
-                    enq
-                  );
+                  // sendSms(
+                  //   `There is a new ${category.name} enquiry from ${
+                  //     enquiry.name
+                  //   }. View and grab this lead in the link: https://www.celebraton.in/dashboard?enquiry=${
+                  //     enq._id
+                  //   }&source=Sms --CelebratON`,
+                  //   enq
+                  // );
                 }
 
                 res.json(enq);
