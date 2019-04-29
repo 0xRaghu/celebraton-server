@@ -418,7 +418,34 @@ router.post(
       { _id: req.params.profileId },
       { $inc: { Wallet: Number(req.params.amount) } },
       { new: true }
-    ).then(profile => res.json(profile));
+    )
+      .populate("user")
+      .then(profile => {
+        //Sending mail to admin
+        var elasticemail = require("elasticemail");
+        var client = elasticemail.createClient({
+          username: "admin@celebraton.in",
+          apiKey: "4110245d-e1d2-4944-ac43-52bd0d720c2b"
+        });
+
+        const msg = {
+          from: "admin@celebraton.in",
+          from_name: "CelebratON.in",
+          to: "admin@celebraton.in," + profile.user.email,
+          subject: "Wallet Recharge Successful - CelebratON",
+          body_html: `Dear ${
+            profile.companyName
+          },<br><br>Your wallet recharge is successful.<br>New Wallet Balance: ${
+            profile.Wallet
+          }<br><br>Happy celebrating !!!`
+        };
+
+        client.mailer.send(msg, function(err, result) {
+          if (err) {
+            return console.error(err);
+          }
+        });
+      });
   }
 );
 
