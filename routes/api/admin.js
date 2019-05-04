@@ -320,11 +320,20 @@ router.post(
                   source: enquiry.source,
                   noOfGuests: enquiry.noOfGuests,
                   isVerified: enquiry.isVerified,
-                  celebratonComment: enquiry.celebratonComment
+                  celebratonComment: enquiry.celebratonComment,
+                  nameOfExhibition: enquiry.nameOfExhibition,
+                  nameOfExhibitor: enquiry.nameOfExhibitor,
+                  stallSize: enquiry.stallSize,
+                  sidesOpen: enquiry.sidesOpen,
+                  stallLocation: enquiry.stallLocation,
+                  stallNumber: enquiry.stallNumber
                 });
 
                 newEnquiry.save().then(enq => {
-                  if (enquiry.sendNotification) {
+                  if (
+                    enquiry.sendNotification &&
+                    category.name != "Stall Fabricator"
+                  ) {
                     sendEmail(
                       `CelebratON - New ${category.name} Enquiry from ${
                         enquiry.name
@@ -342,6 +351,52 @@ router.post(
                       )}<br><b>Requirement: </b>${enquiry.servicesRequired.join(
                         ","
                       )}<br><b>Locality: </b>${enquiry.locality} (in ${
+                        enquiry.city
+                      })<br><b>Budget: </b>${
+                        budgetRange.to === 0
+                          ? `Above Rs.${budgetRange.from}`
+                          : `Rs.${budgetRange.from} to ${budgetRange.to}`
+                      }<br><b>Other Info: </b>${
+                        enquiry.otherInfo
+                      }<br><b>CelebratON Comments: </b>${
+                        enquiry.celebratonComment
+                      }<br><b>Lead Amount: </b>Rs.${leadAmount}<br><br>View and grab this lead in the link: <a href="https://www.celebraton.in/dashboard?enquiry=${
+                        enq._id
+                      }&source=Email">View Enquiry</a><br><b>As per the last Mail, kindly insist the customer to pay the advance and the final payment through CelebratON to get better conversion rates. </b><br><br>Happy celebrating !!!`,
+                      enq
+                    );
+                    // sendSms(
+                    //   `There is a new ${category.name} enquiry from ${
+                    //     enquiry.name
+                    //   }. View and grab this lead in the link: https://www.celebraton.in/dashboard?enquiry=${
+                    //     enq._id
+                    //   }&source=Sms --CelebratON`,
+                    //   enq
+                    // );
+                  }
+                  if (
+                    enquiry.sendNotification &&
+                    category.name == "Stall Fabricator"
+                  ) {
+                    sendEmail(
+                      `CelebratON - New ${category.name} Enquiry from ${
+                        enquiry.name
+                      }`,
+                      `Dear Partner,<br><br>You have got a new enquiry from ${
+                        enquiry.name
+                      }.<br><br><span style="color:green"><b>This is a Verified Lead</b></span><br><br>Find below the details of this order:<br><br><b>Category: </b>${
+                        category.name
+                      }<br><b>Event Date: </b>${moment(
+                        enquiry.eventDate
+                      ).format(
+                        "DD MMM, YYYY"
+                      )}<br><b>Requirement: </b>${enquiry.servicesRequired.join(
+                        ","
+                      )}<br><b>Name of the exhibition: </b>${
+                        enquiry.nameOfExhibition
+                      }<br><b>Stall size: </b>${
+                        enquiry.stallSize
+                      }<br><b>Locality: </b>${enquiry.locality} (in ${
                         enquiry.city
                       })<br><b>Budget: </b>${
                         budgetRange.to === 0
@@ -387,12 +442,21 @@ router.post(
                       source: enquiry.source,
                       noOfGuests: enquiry.noOfGuests,
                       isVerified: enquiry.isVerified,
-                      celebratonComment: enquiry.celebratonComment
+                      celebratonComment: enquiry.celebratonComment,
+                      nameOfExhibition: enquiry.nameOfExhibition,
+                      nameOfExhibitor: enquiry.nameOfExhibitor,
+                      stallSize: enquiry.stallSize,
+                      sidesOpen: enquiry.sidesOpen,
+                      stallLocation: enquiry.stallLocation,
+                      stallNumber: enquiry.stallNumber
                     }
                   },
                   { new: true }
                 ).then(enq => {
-                  if (enquiry.sendNotification) {
+                  if (
+                    enquiry.sendNotification &&
+                    category.name != "Stall Fabricator"
+                  ) {
                     sendEmail(
                       `CelebratON - New ${category.name} Enquiry from ${
                         enquiry.name
@@ -433,7 +497,52 @@ router.post(
                     //   enq
                     // );
                   }
-
+                  if (
+                    enquiry.sendNotification &&
+                    category.name == "Stall Fabricator"
+                  ) {
+                    sendEmail(
+                      `CelebratON - New ${category.name} Enquiry from ${
+                        enquiry.name
+                      }`,
+                      `Dear Partner,<br><br>You have got a new enquiry from ${
+                        enquiry.name
+                      }.<br><br><span style="color:green"><b>This is a Verified Lead</b></span><br><br>Find below the details of this order:<br><br><b>Category: </b>${
+                        category.name
+                      }<br><b>Event Date: </b>${moment(
+                        enquiry.eventDate
+                      ).format(
+                        "DD MMM, YYYY"
+                      )}<br><b>Requirement: </b>${enquiry.servicesRequired.join(
+                        ","
+                      )}<br><b>Name of the exhibition: </b>${
+                        enquiry.nameOfExhibition
+                      }<br><b>Stall size: </b>${
+                        enquiry.stallSize
+                      }<br><b>Locality: </b>${enquiry.locality} (in ${
+                        enquiry.city
+                      })<br><b>Budget: </b>${
+                        budgetRange.to === 0
+                          ? `Above Rs.${budgetRange.from}`
+                          : `Rs.${budgetRange.from} to ${budgetRange.to}`
+                      }<br><b>Other Info: </b>${
+                        enquiry.otherInfo
+                      }<br><b>CelebratON Comments: </b>${
+                        enquiry.celebratonComment
+                      }<br><b>Lead Amount: </b>Rs.${leadAmount}<br><br>View and grab this lead in the link: <a href="https://www.celebraton.in/dashboard?enquiry=${
+                        enq._id
+                      }&source=Email">View Enquiry</a><br><b>As per the last Mail, kindly insist the customer to pay the advance and the final payment through CelebratON to get better conversion rates. </b><br><br>Happy celebrating !!!`,
+                      enq
+                    );
+                    // sendSms(
+                    //   `There is a new ${category.name} enquiry from ${
+                    //     enquiry.name
+                    //   }. View and grab this lead in the link: https://www.celebraton.in/dashboard?enquiry=${
+                    //     enq._id
+                    //   }&source=Sms --CelebratON`,
+                    //   enq
+                    // );
+                  }
                   res.json(enq);
                 });
               }
@@ -468,11 +577,20 @@ router.post(
                 source: enquiry.source,
                 noOfGuests: enquiry.noOfGuests,
                 isVerified: enquiry.isVerified,
-                celebratonComment: enquiry.celebratonComment
+                celebratonComment: enquiry.celebratonComment,
+                nameOfExhibition: enquiry.nameOfExhibition,
+                nameOfExhibitor: enquiry.nameOfExhibitor,
+                stallSize: enquiry.stallSize,
+                sidesOpen: enquiry.sidesOpen,
+                stallLocation: enquiry.stallLocation,
+                stallNumber: enquiry.stallNumber
               });
 
               newEnquiry.save().then(enq => {
-                if (enquiry.sendNotification) {
+                if (
+                  enquiry.sendNotification &&
+                  category.name != "Stall Fabricator"
+                ) {
                   sendEmail(
                     `CelebratON - New ${category.name} Enquiry from ${
                       enquiry.name
@@ -511,7 +629,50 @@ router.post(
                   //   enq
                   // );
                 }
-
+                if (
+                  enquiry.sendNotification &&
+                  category.name == "Stall Fabricator"
+                ) {
+                  sendEmail(
+                    `CelebratON - New ${category.name} Enquiry from ${
+                      enquiry.name
+                    }`,
+                    `Dear Partner,<br><br>You have got a new enquiry from ${
+                      enquiry.name
+                    }.<br><br><span style="color:green"><b>This is a Verified Lead</b></span><br><br>Find below the details of this order:<br><br><b>Category: </b>${
+                      category.name
+                    }<br><b>Event Date: </b>${moment(enquiry.eventDate).format(
+                      "DD MMM, YYYY"
+                    )}<br><b>Requirement: </b>${enquiry.servicesRequired.join(
+                      ","
+                    )}<br><b>Name of the exhibition: </b>${
+                      enquiry.nameOfExhibition
+                    }<br><b>Stall size: </b>${
+                      enquiry.stallSize
+                    }<br><b>Locality: </b>${enquiry.locality} (in ${
+                      enquiry.city
+                    })<br><b>Budget: </b>${
+                      budgetRange.to === 0
+                        ? `Above Rs.${budgetRange.from}`
+                        : `Rs.${budgetRange.from} to ${budgetRange.to}`
+                    }<br><b>Other Info: </b>${
+                      enquiry.otherInfo
+                    }<br><b>CelebratON Comments: </b>${
+                      enquiry.celebratonComment
+                    }<br><b>Lead Amount: </b>Rs.${leadAmount}<br><br>View and grab this lead in the link: <a href="https://www.celebraton.in/dashboard?enquiry=${
+                      enq._id
+                    }&source=Email">View Enquiry</a><br><b>As per the last Mail, kindly insist the customer to pay the advance and the final payment through CelebratON to get better conversion rates. </b><br><br>Happy celebrating !!!`,
+                    enq
+                  );
+                  // sendSms(
+                  //   `There is a new ${category.name} enquiry from ${
+                  //     enquiry.name
+                  //   }. View and grab this lead in the link: https://www.celebraton.in/dashboard?enquiry=${
+                  //     enq._id
+                  //   }&source=Sms --CelebratON`,
+                  //   enq
+                  // );
+                }
                 res.json(enq);
               });
             } else {
@@ -533,12 +694,21 @@ router.post(
                     source: enquiry.source,
                     noOfGuests: enquiry.noOfGuests,
                     isVerified: enquiry.isVerified,
-                    celebratonComment: enquiry.celebratonComment
+                    celebratonComment: enquiry.celebratonComment,
+                    nameOfExhibition: enquiry.nameOfExhibition,
+                    nameOfExhibitor: enquiry.nameOfExhibitor,
+                    stallSize: enquiry.stallSize,
+                    sidesOpen: enquiry.sidesOpen,
+                    stallLocation: enquiry.stallLocation,
+                    stallNumber: enquiry.stallNumber
                   }
                 },
                 { new: true }
               ).then(enq => {
-                if (enquiry.sendNotification) {
+                if (
+                  enquiry.sendNotification &&
+                  category.name != "Stall Fabricator"
+                ) {
                   sendEmail(
                     `CelebratON - New ${category.name} Enquiry from ${
                       enquiry.name
@@ -554,6 +724,50 @@ router.post(
                     )}<br><b>Requirement: </b>${enquiry.servicesRequired.join(
                       ","
                     )}<br><b>Locality: </b>${enquiry.locality} (in ${
+                      enquiry.city
+                    })<br><b>Budget: </b>${
+                      budgetRange.to === 0
+                        ? `Above Rs.${budgetRange.from}`
+                        : `Rs.${budgetRange.from} to ${budgetRange.to}`
+                    }<br><b>Other Info: </b>${
+                      enquiry.otherInfo
+                    }<br><b>CelebratON Comments: </b>${
+                      enquiry.celebratonComment
+                    }<br><b>Lead Amount: </b>Rs.${leadAmount}<br><br>View and grab this lead in the link: <a href="https://www.celebraton.in/dashboard?enquiry=${
+                      enq._id
+                    }&source=Email">View Enquiry</a><br><b>As per the last Mail, kindly insist the customer to pay the advance and the final payment through CelebratON to get better conversion rates. </b><br><br>Happy celebrating !!!`,
+                    enq
+                  );
+                  // sendSms(
+                  //   `There is a new ${category.name} enquiry from ${
+                  //     enquiry.name
+                  //   }. View and grab this lead in the link: https://www.celebraton.in/dashboard?enquiry=${
+                  //     enq._id
+                  //   }&source=Sms --CelebratON`,
+                  //   enq
+                  // );
+                }
+                if (
+                  enquiry.sendNotification &&
+                  category.name == "Stall Fabricator"
+                ) {
+                  sendEmail(
+                    `CelebratON - New ${category.name} Enquiry from ${
+                      enquiry.name
+                    }`,
+                    `Dear Partner,<br><br>You have got a new enquiry from ${
+                      enquiry.name
+                    }.<br><br><span style="color:green"><b>This is a Verified Lead</b></span><br><br>Find below the details of this order:<br><br><b>Category: </b>${
+                      category.name
+                    }<br><b>Event Date: </b>${moment(enquiry.eventDate).format(
+                      "DD MMM, YYYY"
+                    )}<br><b>Requirement: </b>${enquiry.servicesRequired.join(
+                      ","
+                    )}<br><b>Name of the exhibition: </b>${
+                      enquiry.nameOfExhibition
+                    }<br><b>Stall size: </b>${
+                      enquiry.stallSize
+                    }<br><b>Locality: </b>${enquiry.locality} (in ${
                       enquiry.city
                     })<br><b>Budget: </b>${
                       budgetRange.to === 0

@@ -77,7 +77,26 @@ const EnquirySchema = new Schema({
     star: { type: Number },
     rating: { type: String },
     partnerChosen: { type: Schema.Types.ObjectId, ref: "users" }
-  }
+  },
+  nameOfExhibition: {
+    type: String
+  },
+  nameOfExhibitor: {
+    type: String
+  },
+  stallSize: {
+    type: String
+  },
+  sidesOpen: {
+    type: String
+  },
+  stallLocation: {
+    type: String
+  },
+  stallNumber: {
+    type: String
+  },
+  floorPlan: { type: [String] }
 });
 
 module.exports = Enquiry = mongoose.model("enquiries", EnquirySchema);

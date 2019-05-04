@@ -18,6 +18,14 @@ router.post("/addImages/:enquiryId", (req, res) => {
   ).then(enquiry => res.json(enquiry));
 });
 
+router.post("/addFloorImages/:enquiryId", (req, res) => {
+  Enquiry.findOneAndUpdate(
+    { _id: req.params.enquiryId },
+    { $set: { floorPlan: req.body } },
+    { new: true }
+  ).then(enquiry => res.json(enquiry));
+});
+
 router.post(
   "/addEnquiry",
   passport.authenticate("jwt", { session: false }),
@@ -50,7 +58,14 @@ router.post(
       sampleImages: [],
       noOfGuests: enquiry.noOfGuests,
       isVerified: false,
-      celebratonComment: enquiry.celebratonComment
+      celebratonComment: enquiry.celebratonComment,
+      nameOfExhibition: enquiry.nameOfExhibition,
+      nameOfExhibitor: enquiry.nameOfExhibitor,
+      stallSize: enquiry.stallSize,
+      sidesOpen: enquiry.sidesOpen,
+      stallLocation: enquiry.stallLocation,
+      stallNumber: enquiry.stallNumber,
+      floorPlan: []
     });
 
     newEnquiry
